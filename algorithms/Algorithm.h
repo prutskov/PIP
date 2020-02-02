@@ -25,16 +25,8 @@ namespace algorithms
 
 		virtual std::vector<std::string> getDevices();
 
-	private:
+	protected:
 		Frame _frame;
 		ParameterIface _parameter;
 	};
 }
-
-class Algorithm
-{
-public:
-	Algorithm();
-	~Algorithm();
-};
-
