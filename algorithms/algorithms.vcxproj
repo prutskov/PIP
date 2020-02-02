@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="algorithms.h" />
     <ClInclude Include="median_filter\openmp\AlgorithmMF_OMP.h" />
     <ClInclude Include="median_filter\Parameter.h" />
     <ClInclude Include="stdafx.h" />
