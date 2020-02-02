@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "stdafx.h"
 #include "Algorithm.h"
-#include "median_filter\openmp\Algorithm.h"
 
 namespace algorithms
 {

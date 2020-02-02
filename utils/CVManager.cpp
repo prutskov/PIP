@@ -59,7 +59,7 @@ namespace utils
 		const int nRows = data.nRows;
 		const int nCols = data.nCols;
 
-		cv::Mat mat(nRows, nCols, CV_8UC3);
+		cv::Mat mat(nRows, nCols, CV_32FC3);
 
 		for (int i = 0; i < nRows; i++)
 		{

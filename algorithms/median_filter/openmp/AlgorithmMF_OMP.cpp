@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Algorithm.h"
+#include "AlgorithmMF_OMP.h"
 #include <algorithm>
 
 namespace algorithms

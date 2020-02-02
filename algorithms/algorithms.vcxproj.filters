@@ -24,10 +24,10 @@
     <ClInclude Include="Algorithm.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="median_filter\openmp\Algorithm.h">
+    <ClInclude Include="median_filter\Parameter.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="median_filter\Parameter.h">
+    <ClInclude Include="median_filter\openmp\AlgorithmMF_OMP.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,7 +38,7 @@
     <ClCompile Include="Algorithm.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="median_filter\openmp\Algorithm.cpp">
+    <ClCompile Include="median_filter\openmp\AlgorithmMF_OMP.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
