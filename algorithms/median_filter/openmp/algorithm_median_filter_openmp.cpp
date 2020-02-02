@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "AlgorithmMF_OMP.h"
+#include "algorithm_median_filter_openmp.h"
 #include <algorithm>
 
 namespace algorithms

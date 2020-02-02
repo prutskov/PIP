@@ -149,6 +149,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,16 +165,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="algorithm.h" />
     <ClInclude Include="algorithms.h" />
-    <ClInclude Include="median_filter\openmp\AlgorithmMF_OMP.h" />
-    <ClInclude Include="median_filter\Parameter.h" />
+    <ClInclude Include="median_filter\openmp\algorithm_median_filter_openmp.h" />
+    <ClInclude Include="median_filter\parameter.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Algorithm.cpp" />
-    <ClCompile Include="median_filter\openmp\AlgorithmMF_OMP.cpp" />
+    <ClCompile Include="algorithm.cpp" />
+    <ClCompile Include="median_filter\openmp\algorithm_median_filter_openmp.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
