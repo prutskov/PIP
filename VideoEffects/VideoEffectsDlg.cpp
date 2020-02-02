@@ -30,6 +30,8 @@ void CVideoEffectsDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_APPLY, &CVideoEffectsDlg::OnBnClickedApply)
+	ON_BN_CLICKED(IDC_OPEN_IMAGE, &CVideoEffectsDlg::OnBnClickedOpen)
 END_MESSAGE_MAP()
 
 
@@ -44,7 +46,7 @@ BOOL CVideoEffectsDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Крупный значок
 	SetIcon(m_hIcon, FALSE);		// Мелкий значок
 
-	// TODO: добавьте дополнительную инициализацию
+	cvManager = new CVManager();
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -83,5 +85,38 @@ void CVideoEffectsDlg::OnPaint()
 HCURSOR CVideoEffectsDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+
+
+void CVideoEffectsDlg::OnBnClickedApply()
+{
+	// TODO: добавьте свой код обработчика уведомлений
+}
+
+
+void CVideoEffectsDlg::OnBnClickedOpen()
+{
+	loadImage();
+	Frame image = cvManager->getImage();
+}
+
+void CVideoEffectsDlg::loadImage()
+{
+	CFileDialog fd(true, NULL, NULL, OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY |
+		OFN_LONGNAMES | OFN_PATHMUSTEXIST, _T("All Files (*.*)|*.*| Bitmap files (*.bmp)|*.bmp| JPEG files (*.jpg)|*.jpg| |"), NULL, 0, TRUE);
+
+	if (fd.DoModal() != IDOK)
+	{
+		MessageBox(L"File is not open!", L"Warning", MB_ICONWARNING);
+	}
+	else
+	{
+		CString pathBMP = fd.GetPathName();
+		CT2CA pathBuf(pathBMP);
+		std::string str(pathBuf);
+		cvManager->loadImage(str, cv::IMREAD_COLOR);
+		cvManager->imageShow(cv::WINDOW_NORMAL);
+	}
 }
 
