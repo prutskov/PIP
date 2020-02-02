@@ -1,0 +1,40 @@
+#pragma once
+#include "Frame.h"
+#include <vector>
+
+using namespace utils;
+
+namespace algorithms
+{
+	struct ParameterIface
+	{
+		virtual ~ParameterIface() {};
+	};
+
+	class Algorithm
+	{
+	public:
+		Algorithm();
+		virtual ~Algorithm();
+
+		virtual Frame getFrame();
+		virtual void setFrame(const Frame &frame);
+		virtual void setParameter(ParameterIface parameter);
+		virtual void generateNoise(float percent);
+		virtual float compute();
+
+		virtual std::vector<std::string> getDevices();
+
+	private:
+		Frame _frame;
+		ParameterIface _parameter;
+	};
+}
+
+class Algorithm
+{
+public:
+	Algorithm();
+	~Algorithm();
+};
+
