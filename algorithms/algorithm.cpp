@@ -31,8 +31,8 @@ namespace algorithms
 
 	void Algorithm::generateNoise(float percent)
 	{
-		const int nRows = _frame.nRows;
-		const int nCols = _frame.nCols;
+		const int nRows = static_cast<int>(_frame.nRows);
+		const int nCols = static_cast<int>(_frame.nCols);
 
 		const int nNoisedPixels = static_cast<int>(nRows*nCols*percent);
 		int k = 0;
