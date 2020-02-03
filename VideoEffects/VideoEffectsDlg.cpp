@@ -112,9 +112,9 @@ void CVideoEffectsDlg::OnBnClickedApply()
 	algorithm->generateNoise(30 / 100.0F);
 	cvManager->imageShow("Noised image", algorithm->getFrame(), cv::WINDOW_NORMAL);
 
-	float duration = algorithm->compute();
+	//float duration = algorithm->compute();
 
-	cvManager->imageShow("Host algorithm.", algorithm->getFrame(), cv::WINDOW_NORMAL);
+	//cvManager->imageShow("Host algorithm.", algorithm->getFrame(), cv::WINDOW_NORMAL);
 }
 
 

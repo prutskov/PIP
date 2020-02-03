@@ -64,9 +64,9 @@ cv::Mat CVManager::convertToMat(Frame data)
 	{
 		for (int j = 0; j < nCols; j++)
 		{
-			mat.at<cv::Vec3f>(i, j)[0] = data.dataBPtr[i*nCols + j];
-			mat.at<cv::Vec3f>(i, j)[1] = data.dataGPtr[i*nCols + j];
-			mat.at<cv::Vec3f>(i, j)[2] = data.dataRPtr[i*nCols + j];
+			mat.at<cv::Vec3f>(i, j)[0] = data.dataBPtr[i*nCols + j] / 255.f;
+			mat.at<cv::Vec3f>(i, j)[1] = data.dataGPtr[i*nCols + j] / 255.f;
+			mat.at<cv::Vec3f>(i, j)[2] = data.dataRPtr[i*nCols + j] / 255.f;
 		}
 	}
 
