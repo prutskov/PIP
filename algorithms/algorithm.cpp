@@ -24,7 +24,7 @@ namespace algorithms
 		_frame = frame;
 	}
 
-	void Algorithm::setParameter(ParameterIface parameter)
+	void Algorithm::setParameter(ParameterIface *parameter)
 	{
 		_parameter = parameter;
 	}

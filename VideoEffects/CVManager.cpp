@@ -58,7 +58,7 @@ cv::Mat CVManager::convertToMat(Frame data)
 	const int nRows = static_cast<int>(data.nRows);
 	const int nCols = static_cast<int>(data.nCols);
 
-	cv::Mat mat(nRows, nCols, CV_32FC1);
+	cv::Mat mat(nRows, nCols, CV_32FC3);
 
 	for (int i = 0; i < nRows; i++)
 	{

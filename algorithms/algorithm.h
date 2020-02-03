@@ -19,7 +19,7 @@ namespace algorithms
 
 		virtual Frame getFrame();
 		virtual void setFrame(const Frame &frame);
-		virtual void setParameter(ParameterIface parameter);
+		virtual void setParameter(ParameterIface *parameter);
 		virtual void generateNoise(float percent);
 		virtual float compute();
 
@@ -27,6 +27,6 @@ namespace algorithms
 
 	protected:
 		Frame _frame;
-		ParameterIface _parameter;
+		ParameterIface *_parameter;
 	};
 }

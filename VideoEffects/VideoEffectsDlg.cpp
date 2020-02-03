@@ -46,6 +46,8 @@ BOOL CVideoEffectsDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Крупный значок
 	SetIcon(m_hIcon, FALSE);		// Мелкий значок
 
+
+	srand(static_cast<uint>(time(NULL)));
 	cvManager = new CVManager();
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
@@ -91,7 +93,28 @@ HCURSOR CVideoEffectsDlg::OnQueryDragIcon()
 
 void CVideoEffectsDlg::OnBnClickedApply()
 {
-	// TODO: добавьте свой код обработчика уведомлений
+	UpdateData(TRUE);
+
+	if (cvManager->isNullImage())
+	{
+		MessageBox(L"Please, load image.", L"Warning", MB_ICONINFORMATION);
+		return;
+	}
+
+	std::shared_ptr<algorithms::Algorithm> algorithm;
+	algorithm = std::shared_ptr<algorithms::median_filter::Algorithm>(new algorithms::median_filter::Algorithm());
+	algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter();
+
+	algorithm->setParameter(parameter);
+	algorithm->setFrame(cvManager->getImage());
+
+
+	algorithm->generateNoise(30 / 100.0F);
+	cvManager->imageShow("Noised image", algorithm->getFrame(), cv::WINDOW_NORMAL);
+
+	float duration = algorithm->compute();
+
+	cvManager->imageShow("Host algorithm.", algorithm->getFrame(), cv::WINDOW_NORMAL);
 }
 
 

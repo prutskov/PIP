@@ -12,7 +12,7 @@ namespace algorithms
 
 		float Algorithm::compute()
 		{
-			const Parameter *par = dynamic_cast<Parameter *>(&_parameter);
+			const Parameter *par = dynamic_cast<Parameter *>(_parameter);
 			if (par->mask == Mask::MASK3X3)
 			{
 				compute3x3();
