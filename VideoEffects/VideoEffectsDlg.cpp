@@ -46,8 +46,12 @@ BOOL CVideoEffectsDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Крупный значок
 	SetIcon(m_hIcon, FALSE);		// Мелкий значок
 
-
 	srand(static_cast<uint>(time(NULL)));
+
+	CDC* dc = GetDlgItem(IDC_VIEW_PORT)->GetDC();
+	GetDlgItem(IDC_VIEW_PORT)->GetClientRect(&_portParams.imgSurface);
+	_imgViewer.initializeOGL(_portParams.imgSurface, dc);
+
 	cvManager = new CVManager();
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
