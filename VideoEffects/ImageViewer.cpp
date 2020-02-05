@@ -13,35 +13,35 @@ ImageViewer::~ImageViewer()
 	wglDeleteContext(wglGetCurrentContext());
 }
 
-void ImageViewer::show(const utils::Frame &frame)
+void ImageViewer::show()
 {
-	//double width = points[0][0].size() / 2;
-	glClearColor(0.5f, 0.5f, 1.f, 0.5);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
+	float* rPtr = _framePtr->dataRPtr.get();
+	float* gPtr = _framePtr->dataGPtr.get();
+	float* bPtr = _framePtr->dataBPtr.get();
+	
+	const int width  = _framePtr->nCols;
+	const int height = _framePtr->nRows;
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//glOrtho(-width * 2.0, width*2.0, -width * 2.0, width*2.0, -width * 2.0, width*2.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	//Установить положение начала вывода битового массива
+	glRasterPos2f(0, 0);
+	//Задать атрибуты вывода пикселов
+	glPixelStorei(GL_UNPACK_ROW_LENGTH, 0); //длина строки
+	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0); // сколько строк пропустить?
+	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0); // сколько пикселов пропустить в каждой строке?
+	//Отобразить пикселы на экране
+	glDrawPixels(width, height, GL_RED, GL_FLOAT, rPtr);
+	glDrawPixels(width, height, GL_GREEN, GL_FLOAT, gPtr);
+	glDrawPixels(width, height, GL_BLUE, GL_FLOAT, bPtr);
+	glFlush();
 
-	glTranslated(0.f, 0.f, 0.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();/*
-	glRotated(*angleX, 1, 0, 0);
-	glRotated(*angleY, 0, 1, 0);
-	glScaled(*zoom, *zoom, *zoom);*/
-	glPolygonMode(GL_FRONT_AND_BACK, GL_QUADS);//
-	glBegin(GL_QUADS);
-
-	glEnd();
-	/*glBegin(GL_LINES);
-	glColor3d(1.0, 0, 0);
-	glVertex3d(1,0,1)
-	glEnd();*/
-	glFinish();
+	//glutSwapBuffers();
 	SwapBuffers(wglGetCurrentDC());
+}
+
+void ImageViewer::setFrame(utils::Frame *frame)
+{
+	_framePtr = frame;
 }
 
 void ImageViewer::initializeOGL(CRect & rt, CDC* pdc)
