@@ -8,10 +8,6 @@
 #include "CVManager.h"
 #include "ImageViewer.h"
 
-struct PortParams
-{
-	CRect imgSurface;
-};
 
 // Диалоговое окно CVideoEffectsDlg
 class CVideoEffectsDlg : public CDialogEx
@@ -48,5 +44,4 @@ public:
 private:
 	CVManager* cvManager;
 	ImageViewer _imgViewer;
-	PortParams _portParams;
 };

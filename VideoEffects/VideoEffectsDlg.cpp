@@ -25,6 +25,7 @@ CVideoEffectsDlg::CVideoEffectsDlg(CWnd* pParent /*=nullptr*/)
 void CVideoEffectsDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_VIEW_PORT, _imgViewer);
 }
 
 BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
@@ -48,9 +49,6 @@ BOOL CVideoEffectsDlg::OnInitDialog()
 
 	srand(static_cast<uint>(time(NULL)));
 
-	CDC* dc = GetDlgItem(IDC_VIEW_PORT)->GetDC();
-	GetDlgItem(IDC_VIEW_PORT)->GetClientRect(&_portParams.imgSurface);
-	_imgViewer.initializeOGL(_portParams.imgSurface, dc);
 
 	cvManager = new CVManager();
 
@@ -116,8 +114,8 @@ void CVideoEffectsDlg::OnBnClickedApply()
 	algorithm->generateNoise(30 / 100.0F);
 	//cvManager->imageShow("Noised image", algorithm->getFrame(), cv::WINDOW_NORMAL);
 
-	_imgViewer.setFrame(&algorithm->getFrame());
-	_imgViewer.show();
+	_imgViewer.setFrame(algorithm->getFrame());
+	_imgViewer.RedrawWindow();
 	//float duration = algorithm->compute();
 
 	//cvManager->imageShow("Host algorithm.", algorithm->getFrame(), cv::WINDOW_NORMAL);
@@ -128,8 +126,8 @@ void CVideoEffectsDlg::OnBnClickedOpen()
 {
 	loadImage();
 	Frame image = cvManager->getImage();
-	_imgViewer.setFrame(&image);
-	_imgViewer.show();
+	_imgViewer.setFrame(image);
+	_imgViewer.RedrawWindow();
 }
 
 void CVideoEffectsDlg::loadImage()
@@ -147,7 +145,7 @@ void CVideoEffectsDlg::loadImage()
 		CT2CA pathBuf(pathBMP);
 		std::string str(pathBuf);
 		cvManager->loadImage(str, cv::IMREAD_COLOR);
-		cvManager->imageShow(cv::WINDOW_NORMAL);
+		//cvManager->imageShow(cv::WINDOW_NORMAL);
 	}
 }
 

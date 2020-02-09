@@ -1,114 +1,76 @@
 #include "stdafx.h"
 #include "ImageViewer.h"
+#include <math.h>
 
-
+ULONG_PTR token1;;
 ImageViewer::ImageViewer()
 {
+	Status s;
+	GdiplusStartupInput input;
+	s = GdiplusStartup(&token1, &input, NULL);
+	if (s != Ok)
+	{
+		MessageBox(L"ERROR!!!", L"Ошибка", MB_ICONERROR);
+	}
 }
 
 
 ImageViewer::~ImageViewer()
 {
-	wglMakeCurrent(pDC->GetSafeHdc(), 0);
-	wglDeleteContext(wglGetCurrentContext());
+	GdiplusShutdown(token1);
 }
 
-void ImageViewer::show()
+
+void ImageViewer::DrawItem(LPDRAWITEMSTRUCT RECT)
 {
-
-	float* rPtr = _framePtr->dataRPtr.get();
-	float* gPtr = _framePtr->dataGPtr.get();
-	float* bPtr = _framePtr->dataBPtr.get();
-	
-	const int width  = _framePtr->nCols;
-	const int height = _framePtr->nRows;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(-width / 2., width / 2., -height / 2., height / 2.);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0.5, 0.5, 0.0, 1.0);
-	//Установить положение начала вывода битового массива
-	glRasterPos2i(-1, 1);
-	glPixelZoom(1, -1);
-	//Задать атрибуты вывода пикселов
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei(GL_UNPACK_ROW_LENGTH, width); //длина строки
-	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0); // сколько строк пропустить?
-	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0); // сколько пикселов пропустить в каждой строке?
-	//Отобразить пикселы на экране
-	glDrawPixels(width, height, GL_LUMINANCE, GL_SHORT, rPtr);
-	/*glDrawPixels(width, height, GL_GREEN, GL_FLOAT, gPtr);
-	glDrawPixels(width, height, GL_BLUE, GL_FLOAT, bPtr);*/
-	glFlush();
-
-	//glutSwapBuffers();
-	SwapBuffers(wglGetCurrentDC());
-}
-
-void ImageViewer::setFrame(utils::Frame *frame)
-{
-	_framePtr = frame;
-}
-
-void ImageViewer::initializeOGL(CRect & rt, CDC* pdc)
-{
-	rect = rt;
-	pDC = pdc;
-	HGLRC hrc;
-	if (!bSetupPixelFormat())
-		return;
-
-	hrc = wglCreateContext(pDC->GetSafeHdc());
-	ASSERT(hrc != NULL);
-
-	wglMakeCurrent(pDC->GetSafeHdc(), hrc);
-
-	glViewport(0, 0, rect.right, rect.bottom);
-
-	glCullFace(GL_FRONT);
-
-	glEnable(GL_DEPTH_TEST);
-	glShadeModel(GL_SMOOTH);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glClearColor(0.5, 0.0, 0.0, 1.0);
-}
-
-BOOL ImageViewer::bSetupPixelFormat()
-{
-	static PIXELFORMATDESCRIPTOR pfd =
+	Graphics gr(RECT->hDC);
+	if (!_frame.isNull())
 	{
-		sizeof(PIXELFORMATDESCRIPTOR),  // size of this pfd
-		1,                              // version number
-		PFD_DRAW_TO_WINDOW |            // support window
-		PFD_SUPPORT_OPENGL |			// support OpenGL
-		PFD_DOUBLEBUFFER,				// double buffered
-		PFD_TYPE_RGBA,                  // RGBA type
-		24,                             // 24-bit color depth
-		0, 0, 0, 0, 0, 0,               // color bits ignored
-		0,                              // no alpha buffer
-		0,                              // shift bit ignored
-		0,                              // no accumulation buffer
-		0, 0, 0, 0,                     // accum bits ignored
-		32,                             // 32-bit z-buffer
-		0,                              // no stencil buffer
-		0,                              // no auxiliary buffer
-		PFD_MAIN_PLANE,                 // main layer
-		0,                              // reserved
-		0, 0, 0                         // layer masks ignored
-	};
-	int pixelformat;
-	if ((pixelformat = ChoosePixelFormat(pDC->GetSafeHdc(), &pfd)) == 0)
-	{
-		return FALSE;
+		const size_t width = _frame.nCols;
+		const size_t height = _frame.nRows;
+
+		Bitmap bmpBuffer(width, height);
+		Rect rectTmp(0, 0, width, height);
+		BitmapData bmpData;
+
+		bmpBuffer.LockBits(&rectTmp, Gdiplus::ImageLockModeRead | Gdiplus::ImageLockModeWrite,
+			bmpBuffer.GetPixelFormat(), &bmpData);
+		BYTE* curPixel = (BYTE*)bmpData.Scan0;
+		int stride = bmpData.Stride;
+
+		/*for (int i = 0; i < height; i++)
+		{
+			for (int j = 0; j < width; j++)
+			{
+				Color color;
+				color = Color::MakeARGB(255, *(_frame.dataRPtr.get() + i * width + j),
+											*(_frame.dataGPtr.get() + i * width + j),
+												*(_frame.dataBPtr.get() + i * width + j));
+				bmpBuffer.SetPixel(j, i, color);
+			}
+		}*/
+
+#pragma omp parallel for
+		for (int i = 0; i < height; i++)
+		{
+			int col = 0;
+			for (int j = 0; j < stride; j+=4)
+			{
+				curPixel[j + i * stride] = *(_frame.dataBPtr.get() + i * width + j / 4);
+				curPixel[j + i * stride + 1] = *(_frame.dataGPtr.get() + i * width + j / 4);
+				curPixel[j + i * stride + 2] = *(_frame.dataRPtr.get() + i * width + j / 4);
+				curPixel[j + i * stride + 3] = 255; 
+
+			}
+		}
+
+		bmpBuffer.UnlockBits(&bmpData);
+		Rect rect(0, 0, RECT->rcItem.right, RECT->rcItem.bottom);
+		gr.DrawImage(&bmpBuffer, rect);
 	}
+}
 
-	if (SetPixelFormat(pDC->GetSafeHdc(), pixelformat, &pfd) == FALSE)
-	{
-		return FALSE;
-	}
-	return TRUE;
+void ImageViewer::setFrame(utils::Frame frame)
+{
+	_frame = frame;
 }

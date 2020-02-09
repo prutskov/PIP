@@ -35,4 +35,9 @@ namespace utils
 		return frameCloned;
 	}
 
+	bool Frame::isNull()
+	{
+		return !dataRPtr.get() ? true : false;
+	}
+
 }	//	namespace utils

@@ -11,6 +11,7 @@ namespace utils
 			std::shared_ptr<float[]> dataG, std::shared_ptr<float[]> dataB);
 
 		Frame clone();
+		bool isNull();
 
 		std::shared_ptr<float[]> dataRPtr;
 		std::shared_ptr<float[]> dataGPtr;
