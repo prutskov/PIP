@@ -112,13 +112,14 @@ void CVideoEffectsDlg::OnBnClickedApply()
 
 
 	algorithm->generateNoise(30 / 100.0F);
-	//cvManager->imageShow("Noised image", algorithm->getFrame(), cv::WINDOW_NORMAL);
 
 	_imgViewer.setFrame(algorithm->getFrame());
 	_imgViewer.RedrawWindow();
-	//float duration = algorithm->compute();
+	float duration = algorithm->compute();
 
-	//cvManager->imageShow("Host algorithm.", algorithm->getFrame(), cv::WINDOW_NORMAL);
+	_imgViewer.setFrame(algorithm->getFrame());
+	_imgViewer.RedrawWindow();
+
 }
 
 
@@ -145,7 +146,6 @@ void CVideoEffectsDlg::loadImage()
 		CT2CA pathBuf(pathBMP);
 		std::string str(pathBuf);
 		cvManager->loadImage(str, cv::IMREAD_COLOR);
-		//cvManager->imageShow(cv::WINDOW_NORMAL);
 	}
 }
 
