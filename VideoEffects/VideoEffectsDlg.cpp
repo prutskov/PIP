@@ -279,12 +279,27 @@ void CVideoEffectsDlg::OnBnClickedOpenVideo()
 void CVideoEffectsDlg::OnBnClickedOpenCamera()
 {
 	UpdateData(TRUE);
-	cv::VideoCapture video(0);
+	/*cv::VideoCapture video(0);
 	if (!video.isOpened())
 	{
 		MessageBox(L"Camera is not open!", L"Warning", MB_ICONWARNING);
 		return;
-	}
+	}*/
+	hThreadCompute = CreateThread(
+		NULL,		// дескриптор защиты
+		0,			// начальный размер стека ( Если это значение нулевое, новый поток использует по умолчанию размер стека исполняемой программы)
+		(LPTHREAD_START_ROUTINE)computeThread,	 // функция потока
+		this,		// параметр потока 
+		0,			//oпции создания(здесь можно отложить запуск выполнения потока. Для запуска потока сразу же, передаём 0.)
+		&pdwThreadCalculate);// идентификатор потока (указатель на переменную, куда будет сохранён идентификатор потока)
+	//videoFlow(video);
+}
 
-	videoFlow(video);
+
+DWORD WINAPI computeThread(PVOID param)
+{
+	CVideoEffectsDlg *dlg = (CVideoEffectsDlg*)param;
+	cv::VideoCapture video(0);
+	dlg->videoFlow(video);
+	return 0;
 }

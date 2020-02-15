@@ -49,7 +49,13 @@ private:
 	ImageViewer _imgViewer;
 	BOOL _accType;
 	CComboBox _deviceNames;
+
+	HANDLE hThreadCompute;
+	DWORD pdwThreadCalculate;
 public:
 	afx_msg void OnBnClickedOpenVideo();
 	afx_msg void OnBnClickedOpenCamera();
 };
+
+DWORD WINAPI computeThread(PVOID param);
+

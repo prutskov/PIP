@@ -38,7 +38,7 @@ void ImageViewer::DrawItem(LPDRAWITEMSTRUCT RECT)
 		BYTE* curPixel = (BYTE*)bmpData.Scan0;
 		int stride = bmpData.Stride;
 
-#pragma omp parallel for
+//#pragma omp parallel for
 		for (int i = 0; i < height; i++)
 		{
 			for (int j = 0; j < stride; j+=4)
