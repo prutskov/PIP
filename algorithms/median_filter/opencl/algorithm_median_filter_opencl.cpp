@@ -175,6 +175,18 @@ namespace algorithms
 
 				_frame = result;
 			}
+
+			std::vector<std::string> Algorithm::getDevices()
+			{
+				std::vector<std::string> deviceNames(_devices.size());
+
+				for (size_t i = 0; i < _devices.size(); i++)
+				{
+					deviceNames[i] = _devices[i].getInfo<CL_DEVICE_NAME>();
+				}
+
+				return deviceNames;
+			}
 		}
 
 	}

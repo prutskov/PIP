@@ -23,6 +23,7 @@ namespace algorithms
 				void buildProgram();
 				void compute3x3();
 				void compute5x5();
+				std::vector<std::string> getDevices() override;
 
 				std::vector<cl::Platform> _platforms;
 				std::vector<cl::Device> _devices;

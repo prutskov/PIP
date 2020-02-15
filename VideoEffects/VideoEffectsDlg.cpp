@@ -2,6 +2,7 @@
 // VideoEffectsDlg.cpp: файл реализации
 //
 
+#include <CL/cl.hpp>
 #include "stdafx.h"
 #include "VideoEffects.h"
 #include "VideoEffectsDlg.h"
@@ -54,6 +55,7 @@ BOOL CVideoEffectsDlg::OnInitDialog()
 
 
 	cvManager = new CVManager();
+	getAvailableDevices();
 
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
@@ -132,6 +134,37 @@ void CVideoEffectsDlg::OnBnClickedOpen()
 	Frame image = cvManager->getImage();
 	_imgViewer.setFrame(image);
 	_imgViewer.RedrawWindow();
+}
+
+void CVideoEffectsDlg::getAvailableDevices()
+{
+	/*Get platfroms*/
+	std::vector<cl::Platform> platforms;
+	cl::Platform::get(&platforms);
+	std::vector<cl::Device> devices;
+
+	/*Get all devices*/
+	for (cl::Platform plat : platforms)
+	{
+		std::vector<cl::Device> device;
+		plat.getDevices(CL_DEVICE_TYPE_ALL, &device);
+		devices.insert(devices.end(), device.begin(), device.end());
+	}
+
+	std::vector<std::string> deviceNames(devices.size());
+
+	for (size_t i = 0; i < devices.size(); i++)
+	{
+		deviceNames[i] = devices[i].getInfo<CL_DEVICE_NAME>();
+	}
+
+	for (int i = 0; i < deviceNames.size(); i++)
+	{
+		CString str(deviceNames[i].c_str());
+		_deviceNames.AddString(str);
+	}
+
+	_deviceNames.SetCurSel(0);
 }
 
 void CVideoEffectsDlg::loadImage()

@@ -37,6 +37,7 @@ protected:
 public:
 	afx_msg void OnBnClickedApply();
 	afx_msg void OnBnClickedOpen();
+	void getAvailableDevices();
 
 public:
 	void loadImage();
@@ -44,7 +45,6 @@ public:
 private:
 	CVManager* cvManager;
 	ImageViewer _imgViewer;
-public:
 	BOOL _accType;
 	CComboBox _deviceNames;
 };
