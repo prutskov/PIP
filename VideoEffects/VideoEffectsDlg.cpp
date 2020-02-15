@@ -18,6 +18,7 @@
 
 CVideoEffectsDlg::CVideoEffectsDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_VIDEOEFFECTS_DIALOG, pParent)
+	, _accType(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -26,6 +27,8 @@ void CVideoEffectsDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_VIEW_PORT, _imgViewer);
+	DDX_Radio(pDX, IDC_RADIO_CL, _accType);
+	DDX_Control(pDX, IDC_COMBO_DEV, _deviceNames);
 }
 
 BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)

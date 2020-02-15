@@ -51,4 +51,7 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="median_filter\opencl\kernels\nativeBitonic.cl" />
+  </ItemGroup>
 </Project>

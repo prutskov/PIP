@@ -27,6 +27,12 @@ namespace algorithms
 
 			Algorithm::~Algorithm() {}
 
+			void Algorithm::setParameter(ParameterIface *parameter)
+			{
+				_parameter = parameter;
+				buildProgram();
+			}
+
 			void Algorithm::buildProgram()
 			{
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
@@ -34,7 +40,7 @@ namespace algorithms
 				cl::Context context(device);
 				_context = context;
 
-				std::ifstream sourceFile("nativeBitonic.cl");
+				std::ifstream sourceFile("kernels/nativeBitonic.cl");
 				std::string sourceCode(std::istreambuf_iterator<char>(sourceFile), (std::istreambuf_iterator<char>()));
 				cl::Program::Sources source(1, std::make_pair(sourceCode.c_str(), sourceCode.length() + 1));
 				_program = cl::Program(_context, source);

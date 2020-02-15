@@ -44,4 +44,7 @@ public:
 private:
 	CVManager* cvManager;
 	ImageViewer _imgViewer;
+public:
+	BOOL _accType;
+	CComboBox _deviceNames;
 };

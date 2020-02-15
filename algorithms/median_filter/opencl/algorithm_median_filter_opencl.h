@@ -17,6 +17,7 @@ namespace algorithms
 			public:
 				Algorithm();
 				float compute() override;
+				void setParameter(ParameterIface *parameter) override;
 				virtual ~Algorithm();
 			private:
 				void buildProgram();
