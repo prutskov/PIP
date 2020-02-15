@@ -37,6 +37,8 @@ BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_APPLY, &CVideoEffectsDlg::OnBnClickedApply)
 	ON_BN_CLICKED(IDC_OPEN_IMAGE, &CVideoEffectsDlg::OnBnClickedOpen)
+	ON_BN_CLICKED(IDC_OPEN_VIDEO, &CVideoEffectsDlg::OnBnClickedOpenVideo)
+	ON_BN_CLICKED(IDC_OPEN_CAMERA, &CVideoEffectsDlg::OnBnClickedOpenCamera)
 END_MESSAGE_MAP()
 
 
@@ -110,7 +112,7 @@ void CVideoEffectsDlg::OnBnClickedApply()
 	if (_accType == 0)
 	{
 		std::shared_ptr<algorithms::Algorithm> algorithm;
-		algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm > (new algorithms::median_filter::opencl::Algorithm());
+		algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm >(new algorithms::median_filter::opencl::Algorithm());
 		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3,
 			_deviceNames.GetCurSel());
 
@@ -130,7 +132,7 @@ void CVideoEffectsDlg::OnBnClickedApply()
 	else if (_accType == 1)
 	{
 		std::shared_ptr<algorithms::Algorithm> algorithm;
-		algorithm = std::shared_ptr<algorithms::median_filter::Algorithm>(new algorithms::median_filter::Algorithm());
+		algorithm = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
 		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter();
 
 		algorithm->setParameter(parameter);
@@ -206,3 +208,83 @@ void CVideoEffectsDlg::loadImage()
 	}
 }
 
+std::string CVideoEffectsDlg::getVideoPath()
+{
+	CFileDialog fd(true, NULL, NULL, OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY |
+		OFN_LONGNAMES | OFN_PATHMUSTEXIST, _T("All Files (*.*)|*.*| AVI files (*.avi)|*.avi| MP4 files (*.mp4)|*.mp4| |"), NULL, 0, TRUE);
+
+	std::string outPath = "";
+	if (fd.DoModal() != IDOK)
+	{
+		MessageBox(L"File is not open!", L"Warning", MB_ICONWARNING);
+	}
+	else
+	{
+		CString path = fd.GetPathName();
+		CT2CA pathBuf(path);
+		std::string str(pathBuf);
+		outPath = str;
+	}
+	return outPath;
+}
+
+void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
+{
+	std::shared_ptr<algorithms::Algorithm> algorithm;
+	if (_accType == 0)
+	{
+		algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm >(new algorithms::median_filter::opencl::Algorithm());
+		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3,
+			_deviceNames.GetCurSel());
+
+		algorithm->setParameter(parameter);
+	}
+	else if (_accType == 1)
+	{
+		algorithm = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
+		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter();
+
+		algorithm->setParameter(parameter);
+
+	}
+	for (;;)
+	{
+		cv::Mat frame;
+		video >> frame; // get a new frame from camera
+		//algorithm->setFrame(cvManager->convertToPtr(frame.clone()));
+		//filterDevice->generateNoise(_percentNoise / 100.0F);
+		//cvHelper->imageShow("Camera:", filterDevice->getFrame(), WINDOW_NORMAL);
+		//algorithm->compute();
+		_imgViewer.setFrame(cvManager->convertToPtr(frame.clone()));
+		_imgViewer.RedrawWindow();
+		//if (waitKey(30) >= 0) break;
+	}
+}
+
+
+void CVideoEffectsDlg::OnBnClickedOpenVideo()
+{
+	UpdateData(TRUE);
+	cv::VideoCapture video(getVideoPath());
+	if (!video.isOpened())
+	{
+		MessageBox(L"Video is not open!", L"Warning", MB_ICONWARNING);
+		return;
+	}
+
+	videoFlow(video);
+}
+
+
+void CVideoEffectsDlg::OnBnClickedOpenCamera()
+{
+	UpdateData(TRUE);
+	cv::VideoCapture video(0);
+	if (!video.isOpened())
+	{
+		MessageBox(L"Camera is not open!", L"Warning", MB_ICONWARNING);
+		return;
+	}
+
+	videoFlow(video);
+}

@@ -41,10 +41,15 @@ public:
 
 public:
 	void loadImage();
+	std::string getVideoPath();
+	void videoFlow(cv::VideoCapture & video);
 
 private:
 	CVManager* cvManager;
 	ImageViewer _imgViewer;
 	BOOL _accType;
 	CComboBox _deviceNames;
+public:
+	afx_msg void OnBnClickedOpenVideo();
+	afx_msg void OnBnClickedOpenCamera();
 };

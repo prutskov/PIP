@@ -10,8 +10,10 @@
 #define IDC_RADIO_CL                    1003
 #define IDC_RADIO_MP                    1004
 #define IDC_RADIO_TBB                   1005
-#define IDC_COMBO1                      1006
 #define IDC_COMBO_DEV                   1006
+#define IDC_OPEN_VIDEO                  1007
+#define IDC_OPEN_VIDEO2                 1008
+#define IDC_OPEN_CAMERA                 1008
 
 // Next default values for new objects
 // 
