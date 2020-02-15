@@ -107,24 +107,45 @@ void CVideoEffectsDlg::OnBnClickedApply()
 		MessageBox(L"Please, load image.", L"Warning", MB_ICONINFORMATION);
 		return;
 	}
+	if (_accType == 0)
+	{
+		std::shared_ptr<algorithms::Algorithm> algorithm;
+		algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm > (new algorithms::median_filter::opencl::Algorithm());
+		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3,
+			_deviceNames.GetCurSel());
 
-	std::shared_ptr<algorithms::Algorithm> algorithm;
-	algorithm = std::shared_ptr<algorithms::median_filter::Algorithm>(new algorithms::median_filter::Algorithm());
-	algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter();
-
-	algorithm->setParameter(parameter);
-	algorithm->setFrame(cvManager->getImage());
+		algorithm->setParameter(parameter);
+		algorithm->setFrame(cvManager->getImage());
 
 
-	algorithm->generateNoise(30 / 100.0F);
+		algorithm->generateNoise(30 / 100.0F);
 
-	_imgViewer.setFrame(algorithm->getFrame());
-	_imgViewer.RedrawWindow();
-	float duration = algorithm->compute();
+		_imgViewer.setFrame(algorithm->getFrame());
+		_imgViewer.RedrawWindow();
+		float duration = algorithm->compute();
 
-	_imgViewer.setFrame(algorithm->getFrame());
-	_imgViewer.RedrawWindow();
+		_imgViewer.setFrame(algorithm->getFrame());
+		_imgViewer.RedrawWindow();
+	}
+	else if (_accType == 1)
+	{
+		std::shared_ptr<algorithms::Algorithm> algorithm;
+		algorithm = std::shared_ptr<algorithms::median_filter::Algorithm>(new algorithms::median_filter::Algorithm());
+		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter();
 
+		algorithm->setParameter(parameter);
+		algorithm->setFrame(cvManager->getImage());
+
+
+		algorithm->generateNoise(30 / 100.0F);
+
+		_imgViewer.setFrame(algorithm->getFrame());
+		_imgViewer.RedrawWindow();
+		float duration = algorithm->compute();
+
+		_imgViewer.setFrame(algorithm->getFrame());
+		_imgViewer.RedrawWindow();
+	}
 }
 
 
@@ -158,7 +179,7 @@ void CVideoEffectsDlg::getAvailableDevices()
 		deviceNames[i] = devices[i].getInfo<CL_DEVICE_NAME>();
 	}
 
-	for (int i = 0; i < deviceNames.size(); i++)
+	for (size_t i = 0; i < deviceNames.size(); i++)
 	{
 		CString str(deviceNames[i].c_str());
 		_deviceNames.AddString(str);

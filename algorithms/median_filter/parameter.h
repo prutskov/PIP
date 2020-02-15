@@ -13,6 +13,11 @@ namespace algorithms
 
 		struct Parameter : algorithms::ParameterIface
 		{
+			Parameter(Mask m = Mask::MASK3X3, size_t device = 0)
+			{
+				mask = m;
+				activeDevice = device;
+			}
 			Mask mask = Mask::MASK3X3;
 			size_t activeDevice = 0;
 		};

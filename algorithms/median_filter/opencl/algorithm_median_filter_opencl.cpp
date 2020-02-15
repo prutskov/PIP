@@ -45,14 +45,17 @@ namespace algorithms
 				cl::Program::Sources source(1, std::make_pair(sourceCode.c_str(), sourceCode.length() + 1));
 				_program = cl::Program(_context, source);
 
-				/*try
-				{*/
+				try
+				{
 					_program.build(_context.getInfo<CL_CONTEXT_DEVICES>());
-				/*}
+				}
 				catch (const cl::Error &err)
 				{
-					_log->add(std::string(err.what()) + ": " + _program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_context.getInfo<CL_CONTEXT_DEVICES>()[0]));
-				}*/
+					std::ofstream fileLog;
+					fileLog.open("_build_log.txt");
+					fileLog << std::string(err.what()) + ": " + _program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_context.getInfo<CL_CONTEXT_DEVICES>()[0]);
+					fileLog.close();
+				}
 			}
 
 			float Algorithm::compute()
@@ -104,8 +107,8 @@ namespace algorithms
 
 				cl::Kernel kernel(_program, "nativeFilter3x3");
 
-				kernel.setArg(0, result.nRows);
-				kernel.setArg(1, result.nCols);
+				kernel.setArg(0, nRows);
+				kernel.setArg(1, nCols);
 				kernel.setArg(2, imageRIn);
 				kernel.setArg(3, imageGIn);
 				kernel.setArg(4, imageBIn);
@@ -157,8 +160,8 @@ namespace algorithms
 
 				cl::Kernel kernel(_program, "nativeFilter5x5");
 
-				kernel.setArg(0, result.nRows);
-				kernel.setArg(1, result.nCols);
+				kernel.setArg(0, nRows);
+				kernel.setArg(1, nCols);
 				kernel.setArg(2, imageRIn);
 				kernel.setArg(3, imageGIn);
 				kernel.setArg(4, imageBIn);
