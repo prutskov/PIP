@@ -1,62 +1,113 @@
 #include "stdafx.h"
 #include "ImageViewer.h"
 
-ULONG_PTR token1;
 
-ImageViewer::ImageViewer()
+ImageViewer::ImageViewer() : _colorData(nullptr)
 {
-	Status s;
-	GdiplusStartupInput input;
-	s = GdiplusStartup(&token1, &input, NULL);
-	if (s != Ok)
-	{
-		MessageBox(L"ERROR!!!", L"Error GDI+ sturtup", MB_ICONERROR);
-	}
 }
 
 
 ImageViewer::~ImageViewer()
 {
-	GdiplusShutdown(token1);
+	wglMakeCurrent(pDC->GetSafeHdc(), 0);
+	wglDeleteContext(wglGetCurrentContext());
 }
 
-
-void ImageViewer::DrawItem(LPDRAWITEMSTRUCT RECT)
+void ImageViewer::show()
 {
-	Graphics gr(RECT->hDC);
-	if (!_frame.isNull())
+
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_FLAT);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if (_colorData != nullptr)
 	{
-		const int width = static_cast<int>(_frame.nCols);
-		const int height = static_cast<int>(_frame.nRows);
-
-		Bitmap bmpBuffer(width, height);
-		Rect rectTmp(0, 0, width, height);
-		BitmapData bmpData;
-
-		bmpBuffer.LockBits(&rectTmp, Gdiplus::ImageLockModeRead | Gdiplus::ImageLockModeWrite,
-			bmpBuffer.GetPixelFormat(), &bmpData);
-		BYTE* curPixel = (BYTE*)bmpData.Scan0;
-		int stride = bmpData.Stride;
-
-//#pragma omp parallel for
-		for (int i = 0; i < height; i++)
-		{
-			for (int j = 0; j < stride; j+=4)
-			{
-				curPixel[j + i * stride] = static_cast<BYTE>(*(_frame.dataBPtr.get() + i * width + j / 4));
-				curPixel[j + i * stride + 1] = static_cast<BYTE>(*(_frame.dataGPtr.get() + i * width + j / 4));
-				curPixel[j + i * stride + 2] = static_cast<BYTE>(*(_frame.dataRPtr.get() + i * width + j / 4));
-				curPixel[j + i * stride + 3] = BYTE(255);
-			}
-		}
-
-		bmpBuffer.UnlockBits(&bmpData);
-		Rect rect(0, 0, RECT->rcItem.right, RECT->rcItem.bottom);
-		gr.DrawImage(&bmpBuffer, rect);
+	const int width = _framePtr.nCols;
+	const int height = _framePtr.nRows;
+		glRasterPos2i(0, 0);
+		//glClearColor(0.5, 0.5, 0.0, 1.0);
+		//Фстановить положение начала вывода битового массива
+		//Этобразить пикселы на экране
+		//glDrawPixels(width, height, GL_LUMINANCE, GL_SHORT, _colorData);
+		glDrawPixels(width, height, GL_RGB, GL_FLOAT, _colorData.get());
 	}
+	glFlush();
+	SwapBuffers(wglGetCurrentDC());
 }
 
 void ImageViewer::setFrame(utils::Frame frame)
 {
-	_frame = frame;
+	_framePtr = frame;
+	float* rPtr = _framePtr.dataRPtr.get();
+	float* gPtr = _framePtr.dataGPtr.get();
+	float* bPtr = _framePtr.dataBPtr.get();
+
+	const int width = _framePtr.nCols;
+	const int height = _framePtr.nRows;
+
+	_colorData = std::shared_ptr<float[]>(new float[width*height * 3], std::default_delete<float[]>());
+
+	for (size_t row = 0; row < height; ++row)
+	{
+		for (size_t col = 0; col < 3 * width; col += 3)
+		{
+			_colorData[3 * width*row + col + 0] = rPtr[row*width + col / 3] / 255.f;
+			_colorData[3 * width*row + col + 1] = gPtr[row*width + col / 3] / 255.f;
+			_colorData[3 * width*row + col + 2] = bPtr[row*width + col / 3] / 255.f;
+		}
+	}
+}
+
+void ImageViewer::initializeOGL(CRect & rt, CDC* pdc)
+{
+	rect = rt;
+	pDC = pdc;
+	HGLRC hrc;
+	if (!bSetupPixelFormat())
+		return;
+
+	hrc = wglCreateContext(pDC->GetSafeHdc());
+	ASSERT(hrc != NULL);
+
+	wglMakeCurrent(pDC->GetSafeHdc(), hrc);
+
+	glViewport(0, 0, rect.right, rect.bottom);
+}
+
+BOOL ImageViewer::bSetupPixelFormat()
+{
+	static PIXELFORMATDESCRIPTOR pfd =
+	{
+		sizeof(PIXELFORMATDESCRIPTOR),  // size of this pfd
+		1,                              // version number
+		PFD_DRAW_TO_WINDOW |            // support window
+		PFD_SUPPORT_OPENGL |			// support OpenGL
+		PFD_DOUBLEBUFFER,				// double buffered
+		PFD_TYPE_RGBA,                  // RGBA type
+		24,                             // 24-bit color depth
+		0, 0, 0, 0, 0, 0,               // color bits ignored
+		0,                              // no alpha buffer
+		0,                              // shift bit ignored
+		0,                              // no accumulation buffer
+		0, 0, 0, 0,                     // accum bits ignored
+		32,                             // 32-bit z-buffer
+		0,                              // no stencil buffer
+		0,                              // no auxiliary buffer
+		PFD_MAIN_PLANE,                 // main layer
+		0,                              // reserved
+		0, 0, 0                         // layer masks ignored
+	};
+	int pixelformat;
+	if ((pixelformat = ChoosePixelFormat(pDC->GetSafeHdc(), &pfd)) == 0)
+	{
+		return FALSE;
+	}
+
+	if (SetPixelFormat(pDC->GetSafeHdc(), pixelformat, &pfd) == FALSE)
+	{
+		return FALSE;
+	}
+	return TRUE;
 }

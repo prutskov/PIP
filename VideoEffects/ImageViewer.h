@@ -1,19 +1,25 @@
 #pragma once
-#include "afxwin.h"
-#include <gdiplus.h>
+#include <gl/GLU.h>
+#include <gl/GL.h>
+#include <memory>
+#include "glut.h"
 #include "frame.h"
 
-using namespace Gdiplus;
-
-class ImageViewer : public CStatic
+class ImageViewer
 {
 public:
 	ImageViewer();
 	~ImageViewer();
-	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
+
+	void show();
 	void setFrame(utils::Frame frame);
+	void initializeOGL(CRect & rt, CDC* pdc);
 
 private:
-	utils::Frame _frame;
+	CRect rect;
+	CDC* pDC;
+	utils::Frame _framePtr;
+	std::shared_ptr<float[]> _colorData;
+	BOOL bSetupPixelFormat();
 };
 

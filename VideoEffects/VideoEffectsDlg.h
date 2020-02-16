@@ -28,6 +28,7 @@ public:
 // Реализация
 protected:
 	HICON m_hIcon;
+	CRect _imgSurface;
 
 	// Созданные функции схемы сообщений
 	virtual BOOL OnInitDialog();
