@@ -16,8 +16,8 @@ public:
 	void initializeOGL(CRect & rt, CDC* pdc);
 
 private:
-	CRect rect;
-	CDC* pDC;
+	CRect _rect;
+	CDC* _pDC;
 	utils::Frame _framePtr;
 	std::shared_ptr<float[]> _colorData;
 	BOOL bSetupPixelFormat();

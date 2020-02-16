@@ -9,13 +9,12 @@ ImageViewer::ImageViewer() : _colorData(nullptr)
 
 ImageViewer::~ImageViewer()
 {
-	wglMakeCurrent(pDC->GetSafeHdc(), 0);
+	wglMakeCurrent(_pDC->GetSafeHdc(), 0);
 	wglDeleteContext(wglGetCurrentContext());
 }
 
 void ImageViewer::show()
 {
-
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glShadeModel(GL_FLAT);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -24,13 +23,25 @@ void ImageViewer::show()
 
 	if (_colorData != nullptr)
 	{
-	const int width = _framePtr.nCols;
-	const int height = _framePtr.nRows;
-		glRasterPos2i(0, 0);
-		//glClearColor(0.5, 0.5, 0.0, 1.0);
-		//Фстановить положение начала вывода битового массива
-		//Этобразить пикселы на экране
-		//glDrawPixels(width, height, GL_LUMINANCE, GL_SHORT, _colorData);
+		const int width = _framePtr.nCols;
+		const int height = _framePtr.nRows;
+
+		const int widthRect = _rect.right;
+		const int heightRect = _rect.bottom;
+
+		float xW = static_cast<float>(widthRect) / width;
+		float xH = static_cast<float>(heightRect) / height;
+
+		if (xH < xW)
+		{
+			glPixelZoom(xH, xH);
+			glRasterPos2f(-1, -1);
+		}
+		else
+		{
+			glPixelZoom(xW, xW);
+			glRasterPos2f(-1, -1);
+		}
 		glDrawPixels(width, height, GL_RGB, GL_FLOAT, _colorData.get());
 	}
 	glFlush();
@@ -53,27 +64,27 @@ void ImageViewer::setFrame(utils::Frame frame)
 	{
 		for (size_t col = 0; col < 3 * width; col += 3)
 		{
-			_colorData[3 * width*row + col + 0] = rPtr[row*width + col / 3] / 255.f;
-			_colorData[3 * width*row + col + 1] = gPtr[row*width + col / 3] / 255.f;
-			_colorData[3 * width*row + col + 2] = bPtr[row*width + col / 3] / 255.f;
+			_colorData[3 * width*row + col + 0] = rPtr[(height - row)*width - col / 3] / 255.f;
+			_colorData[3 * width*row + col + 1] = gPtr[(height - row)*width - col / 3] / 255.f;
+			_colorData[3 * width*row + col + 2] = bPtr[(height - row)*width - col / 3] / 255.f;
 		}
 	}
 }
 
 void ImageViewer::initializeOGL(CRect & rt, CDC* pdc)
 {
-	rect = rt;
-	pDC = pdc;
+	_rect = rt;
+	_pDC = pdc;
 	HGLRC hrc;
 	if (!bSetupPixelFormat())
 		return;
 
-	hrc = wglCreateContext(pDC->GetSafeHdc());
+	hrc = wglCreateContext(_pDC->GetSafeHdc());
 	ASSERT(hrc != NULL);
 
-	wglMakeCurrent(pDC->GetSafeHdc(), hrc);
+	wglMakeCurrent(_pDC->GetSafeHdc(), hrc);
 
-	glViewport(0, 0, rect.right, rect.bottom);
+	glViewport(0, 0, _rect.right, _rect.bottom);
 }
 
 BOOL ImageViewer::bSetupPixelFormat()
@@ -100,12 +111,12 @@ BOOL ImageViewer::bSetupPixelFormat()
 		0, 0, 0                         // layer masks ignored
 	};
 	int pixelformat;
-	if ((pixelformat = ChoosePixelFormat(pDC->GetSafeHdc(), &pfd)) == 0)
+	if ((pixelformat = ChoosePixelFormat(_pDC->GetSafeHdc(), &pfd)) == 0)
 	{
 		return FALSE;
 	}
 
-	if (SetPixelFormat(pDC->GetSafeHdc(), pixelformat, &pfd) == FALSE)
+	if (SetPixelFormat(_pDC->GetSafeHdc(), pixelformat, &pfd) == FALSE)
 	{
 		return FALSE;
 	}

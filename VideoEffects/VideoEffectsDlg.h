@@ -28,7 +28,6 @@ public:
 // Реализация
 protected:
 	HICON m_hIcon;
-	CRect _imgSurface;
 
 	// Созданные функции схемы сообщений
 	virtual BOOL OnInitDialog();
@@ -44,10 +43,13 @@ public:
 	void loadImage();
 	std::string getVideoPath();
 	void videoFlow(cv::VideoCapture & video);
+	cv::VideoCapture _videoCapture;
 
 private:
 	CVManager* cvManager;
 	ImageViewer _imgViewer;
+	CRect _imgSurface;
+
 	BOOL _accType;
 	CComboBox _deviceNames;
 
@@ -56,6 +58,7 @@ private:
 public:
 	afx_msg void OnBnClickedOpenVideo();
 	afx_msg void OnBnClickedOpenCamera();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 DWORD WINAPI computeThread(PVOID param);

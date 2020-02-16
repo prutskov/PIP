@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_OPEN_IMAGE, &CVideoEffectsDlg::OnBnClickedOpen)
 	ON_BN_CLICKED(IDC_OPEN_VIDEO, &CVideoEffectsDlg::OnBnClickedOpenVideo)
 	ON_BN_CLICKED(IDC_OPEN_CAMERA, &CVideoEffectsDlg::OnBnClickedOpenCamera)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -92,7 +93,9 @@ void CVideoEffectsDlg::OnPaint()
 	}
 	else
 	{
+		EnterCriticalSection(&cs);
 		_imgViewer.show();
+		LeaveCriticalSection(&cs);
 		CDialogEx::OnPaint();
 	}
 }
@@ -223,35 +226,30 @@ std::string CVideoEffectsDlg::getVideoPath()
 void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 {
 	std::shared_ptr<algorithms::Algorithm> algorithm;
+	algorithms::ParameterIface *parameter;
 	if (_accType == 0)
 	{
 		algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm >(new algorithms::median_filter::opencl::Algorithm());
-		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3,
-			_deviceNames.GetCurSel());
+		parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK5X5, _deviceNames.GetCurSel());
 
-		algorithm->setParameter(parameter);
 	}
 	else if (_accType == 1)
 	{
 		algorithm = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
-		algorithms::ParameterIface *parameter = new algorithms::median_filter::Parameter();
-
-		algorithm->setParameter(parameter);
-
+		parameter = new algorithms::median_filter::Parameter();
 	}
+
+	algorithm->setParameter(parameter);
 	for (;;)
 	{
 		cv::Mat frame;
 		video >> frame; // get a new frame from camera
-		//algorithm->setFrame(cvManager->convertToPtr(frame.clone()));
-		//filterDevice->generateNoise(_percentNoise / 100.0F);
-		//cvHelper->imageShow("Camera:", filterDevice->getFrame(), WINDOW_NORMAL);
-		//algorithm->compute();
+		algorithm->setFrame(cvManager->convertToPtr(frame.clone()));
+		algorithm->generateNoise(50 / 100.0F);
+		algorithm->compute();
 		EnterCriticalSection(&cs);
-		_imgViewer.setFrame(cvManager->convertToPtr(frame.clone()));
-		_imgViewer.show();
+		_imgViewer.setFrame(algorithm->getFrame());
 		LeaveCriticalSection(&cs);
-		//if (waitKey(30) >= 0) break;
 	}
 }
 
@@ -259,26 +257,13 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 void CVideoEffectsDlg::OnBnClickedOpenVideo()
 {
 	UpdateData(TRUE);
-	cv::VideoCapture video(getVideoPath());
-	if (!video.isOpened())
+	_videoCapture = cv::VideoCapture(getVideoPath());
+	if (!_videoCapture.isOpened())
 	{
 		MessageBox(L"Video is not open!", L"Warning", MB_ICONWARNING);
 		return;
 	}
-
-	videoFlow(video);
-}
-
-
-void CVideoEffectsDlg::OnBnClickedOpenCamera()
-{
-	UpdateData(TRUE);
-	cv::VideoCapture video(0);
-	if (!video.isOpened())
-	{
-		MessageBox(L"Camera is not open!", L"Warning", MB_ICONWARNING);
-		return;
-	}
+	SetTimer(1, 30, NULL);
 	hThreadCompute = CreateThread(
 		NULL,		// дескриптор защиты
 		0,			// начальный размер стека ( Если это значение нулевое, новый поток использует по умолчанию размер стека исполняемой программы)
@@ -286,14 +271,41 @@ void CVideoEffectsDlg::OnBnClickedOpenCamera()
 		this,		// параметр потока 
 		0,			//oпции создания(здесь можно отложить запуск выполнения потока. Для запуска потока сразу же, передаём 0.)
 		&pdwThreadCalculate);// идентификатор потока (указатель на переменную, куда будет сохранён идентификатор потока)
-	videoFlow(video);
+}
+
+
+void CVideoEffectsDlg::OnBnClickedOpenCamera()
+{
+	UpdateData(TRUE);
+	_videoCapture = cv::VideoCapture(0);
+	if (!_videoCapture.isOpened())
+	{
+		MessageBox(L"Camera is not open!", L"Warning", MB_ICONWARNING);
+		return;
+	}
+	SetTimer(1, 30, NULL);
+	hThreadCompute = CreateThread(
+		NULL,		// дескриптор защиты
+		0,			// начальный размер стека ( Если это значение нулевое, новый поток использует по умолчанию размер стека исполняемой программы)
+		(LPTHREAD_START_ROUTINE)computeThread,	 // функция потока
+		this,		// параметр потока 
+		0,			//oпции создания(здесь можно отложить запуск выполнения потока. Для запуска потока сразу же, передаём 0.)
+		&pdwThreadCalculate);// идентификатор потока (указатель на переменную, куда будет сохранён идентификатор потока)
 }
 
 
 DWORD WINAPI computeThread(PVOID param)
 {
 	CVideoEffectsDlg *dlg = (CVideoEffectsDlg*)param;
-	cv::VideoCapture video(0);
-	dlg->videoFlow(video);
+	dlg->videoFlow(dlg->_videoCapture);
 	return 0;
+}
+
+void CVideoEffectsDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	EnterCriticalSection(&cs);
+	_imgViewer.show();
+	LeaveCriticalSection(&cs);
+
+	CDialogEx::OnTimer(nIDEvent);
 }
