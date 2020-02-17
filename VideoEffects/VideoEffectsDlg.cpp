@@ -29,6 +29,7 @@ void CVideoEffectsDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Radio(pDX, IDC_RADIO_CL, _accType);
 	DDX_Control(pDX, IDC_COMBO_DEV, _deviceNames);
+	DDX_Control(pDX, IDC_IMG_SIZE, _ctrlImgSize);
 }
 
 BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
@@ -112,7 +113,7 @@ HCURSOR CVideoEffectsDlg::OnQueryDragIcon()
 void CVideoEffectsDlg::OnBnClickedApply()
 {
 	UpdateData(TRUE);
-
+	
 	if (cvManager->isNullImage())
 	{
 		MessageBox(L"Please, load image.", L"Warning", MB_ICONINFORMATION);
@@ -150,6 +151,17 @@ void CVideoEffectsDlg::OnBnClickedOpen()
 {
 	loadImage();
 	Frame image = cvManager->getImage();
+
+	const size_t width = image.nCols;
+	const size_t height = image.nRows;
+
+	CString str("Resolution: ");
+	CString  arg1, arg2;
+	arg1.Format(_T("%lu"), width);
+	arg2.Format(_T("%lu"), height);
+	str += arg1 + "x" + arg2;
+	_ctrlImgSize.SetWindowTextW(str);
+
 	_imgViewer.setFrame(image);
 	_imgViewer.show();
 }

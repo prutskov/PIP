@@ -59,6 +59,7 @@ public:
 	afx_msg void OnBnClickedOpenVideo();
 	afx_msg void OnBnClickedOpenCamera();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	CStatic _ctrlImgSize;
 };
 
 DWORD WINAPI computeThread(PVOID param);

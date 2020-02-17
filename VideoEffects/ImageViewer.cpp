@@ -23,8 +23,8 @@ void ImageViewer::show()
 
 	if (_colorData != nullptr)
 	{
-		const int width = _framePtr.nCols;
-		const int height = _framePtr.nRows;
+		const int width = static_cast<int>(_framePtr.nCols);
+		const int height = static_cast<int>(_framePtr.nRows);
 
 		const int widthRect = _rect.right;
 		const int heightRect = _rect.bottom;
@@ -55,8 +55,8 @@ void ImageViewer::setFrame(utils::Frame frame)
 	float* gPtr = _framePtr.dataGPtr.get();
 	float* bPtr = _framePtr.dataBPtr.get();
 
-	const int width = _framePtr.nCols;
-	const int height = _framePtr.nRows;
+	const int width = static_cast<int>(_framePtr.nCols);
+	const int height = static_cast<int>(_framePtr.nRows);
 
 	_colorData = std::shared_ptr<float[]>(new float[width*height * 3], std::default_delete<float[]>());
 
