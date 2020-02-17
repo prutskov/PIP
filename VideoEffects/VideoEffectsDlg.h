@@ -55,11 +55,14 @@ private:
 
 	HANDLE hThreadCompute;
 	DWORD pdwThreadCalculate;
+	bool _offThread;
+	bool _isImage;
 public:
 	afx_msg void OnBnClickedOpenVideo();
 	afx_msg void OnBnClickedOpenCamera();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CStatic _ctrlImgSize;
+	afx_msg void OnBnClickedStop();
 };
 
 DWORD WINAPI computeThread(PVOID param);

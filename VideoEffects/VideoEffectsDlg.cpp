@@ -20,6 +20,7 @@ CRITICAL_SECTION cs;
 CVideoEffectsDlg::CVideoEffectsDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_VIDEOEFFECTS_DIALOG, pParent)
 	, _accType(FALSE)
+	, _offThread(false)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -40,6 +41,7 @@ BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_OPEN_VIDEO, &CVideoEffectsDlg::OnBnClickedOpenVideo)
 	ON_BN_CLICKED(IDC_OPEN_CAMERA, &CVideoEffectsDlg::OnBnClickedOpenCamera)
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_STOP, &CVideoEffectsDlg::OnBnClickedStop)
 END_MESSAGE_MAP()
 
 
@@ -114,41 +116,65 @@ void CVideoEffectsDlg::OnBnClickedApply()
 {
 	UpdateData(TRUE);
 	
-	if (cvManager->isNullImage())
+	if (_isImage)
 	{
-		MessageBox(L"Please, load image.", L"Warning", MB_ICONINFORMATION);
-		return;
+		if (cvManager->isNullImage())
+		{
+			MessageBox(L"Please, load image.", L"Warning", MB_ICONINFORMATION);
+			return;
+		}
+
+		std::shared_ptr<algorithms::Algorithm> algorithm;
+		algorithms::ParameterIface *parameter;
+		if (_accType == 0)
+		{
+			algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm >(new algorithms::median_filter::opencl::Algorithm());
+			parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3, _deviceNames.GetCurSel());
+
+		}
+		else if (_accType == 1)
+		{
+			algorithm = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
+			parameter = new algorithms::median_filter::Parameter();
+		}
+		algorithm->setParameter(parameter);
+		algorithm->setFrame(cvManager->getImage());
+
+
+		//algorithm->generateNoise(30 / 100.0F);
+
+		_imgViewer.setFrame(algorithm->getFrame());
+		_imgViewer.show();
+		float duration = algorithm->compute();
+
+		_imgViewer.setFrame(algorithm->getFrame());
+		_imgViewer.show();
 	}
-	std::shared_ptr<algorithms::Algorithm> algorithm;
-	algorithms::ParameterIface *parameter;
-	if (_accType == 0)
+	else
 	{
-		algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm >(new algorithms::median_filter::opencl::Algorithm());
-		parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3, _deviceNames.GetCurSel());
-
+		if (!_videoCapture.isOpened())
+		{
+			MessageBox(L"Video is not open!", L"Warning", MB_ICONWARNING);
+			return;
+		}
+		_offThread = false;
+		SetTimer(1, 30, NULL);
+		hThreadCompute = CreateThread(
+			NULL,		// дескриптор защиты
+			0,			// начальный размер стека ( Если это значение нулевое, новый поток использует по умолчанию размер стека исполняемой программы)
+			(LPTHREAD_START_ROUTINE)computeThread,	 // функция потока
+			this,		// параметр потока 
+			0,			//oпции создания(здесь можно отложить запуск выполнения потока. Для запуска потока сразу же, передаём 0.)
+			&pdwThreadCalculate);// идентификатор потока (указатель на переменную, куда будет сохранён идентификатор потока)
 	}
-	else if (_accType == 1)
-	{
-		algorithm = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
-		parameter = new algorithms::median_filter::Parameter();
-	}
-	algorithm->setParameter(parameter);
-	algorithm->setFrame(cvManager->getImage());
-
-
-	//algorithm->generateNoise(30 / 100.0F);
-
-	_imgViewer.setFrame(algorithm->getFrame());
-	_imgViewer.show();
-	float duration = algorithm->compute();
-
-	_imgViewer.setFrame(algorithm->getFrame());
-	_imgViewer.show();
 }
 
 
 void CVideoEffectsDlg::OnBnClickedOpen()
 {
+	_isImage = true;
+	_offThread = true;
+
 	loadImage();
 	Frame image = cvManager->getImage();
 
@@ -262,6 +288,7 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 		EnterCriticalSection(&cs);
 		_imgViewer.setFrame(algorithm->getFrame());
 		LeaveCriticalSection(&cs);
+		if (_offThread) break;
 	}
 }
 
@@ -269,40 +296,28 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 void CVideoEffectsDlg::OnBnClickedOpenVideo()
 {
 	UpdateData(TRUE);
+	_isImage = false;
+	_offThread = true;
 	_videoCapture = cv::VideoCapture(getVideoPath());
 	if (!_videoCapture.isOpened())
 	{
 		MessageBox(L"Video is not open!", L"Warning", MB_ICONWARNING);
 		return;
 	}
-	SetTimer(1, 30, NULL);
-	hThreadCompute = CreateThread(
-		NULL,		// дескриптор защиты
-		0,			// начальный размер стека ( Если это значение нулевое, новый поток использует по умолчанию размер стека исполняемой программы)
-		(LPTHREAD_START_ROUTINE)computeThread,	 // функция потока
-		this,		// параметр потока 
-		0,			//oпции создания(здесь можно отложить запуск выполнения потока. Для запуска потока сразу же, передаём 0.)
-		&pdwThreadCalculate);// идентификатор потока (указатель на переменную, куда будет сохранён идентификатор потока)
 }
 
 
 void CVideoEffectsDlg::OnBnClickedOpenCamera()
 {
 	UpdateData(TRUE);
+	_isImage = false;
+	_offThread = true;
 	_videoCapture = cv::VideoCapture(0);
 	if (!_videoCapture.isOpened())
 	{
 		MessageBox(L"Camera is not open!", L"Warning", MB_ICONWARNING);
 		return;
 	}
-	SetTimer(1, 30, NULL);
-	hThreadCompute = CreateThread(
-		NULL,		// дескриптор защиты
-		0,			// начальный размер стека ( Если это значение нулевое, новый поток использует по умолчанию размер стека исполняемой программы)
-		(LPTHREAD_START_ROUTINE)computeThread,	 // функция потока
-		this,		// параметр потока 
-		0,			//oпции создания(здесь можно отложить запуск выполнения потока. Для запуска потока сразу же, передаём 0.)
-		&pdwThreadCalculate);// идентификатор потока (указатель на переменную, куда будет сохранён идентификатор потока)
 }
 
 
@@ -320,4 +335,11 @@ void CVideoEffectsDlg::OnTimer(UINT_PTR nIDEvent)
 	LeaveCriticalSection(&cs);
 
 	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+void CVideoEffectsDlg::OnBnClickedStop()
+{
+	_offThread = true;
+	KillTimer(1);
 }

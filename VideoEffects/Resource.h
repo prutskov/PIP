@@ -14,6 +14,8 @@
 #define IDC_OPEN_VIDEO                  1007
 #define IDC_OPEN_CAMERA                 1008
 #define IDC_IMG_SIZE                    1009
+#define IDC_APPLY2                      1010
+#define IDC_STOP                        1010
 
 // Next default values for new objects
 // 
