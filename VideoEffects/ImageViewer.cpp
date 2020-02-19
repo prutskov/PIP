@@ -34,13 +34,13 @@ void ImageViewer::show()
 
 		if (xH < xW)
 		{
+			glRasterPos2f(-xH / xW, -1.f);
 			glPixelZoom(xH, xH);
-			glRasterPos2f(-1, -1);
 		}
 		else
 		{
+			glRasterPos2f(-1.f, -xW / xH);
 			glPixelZoom(xW, xW);
-			glRasterPos2f(-1, -1);
 		}
 		glDrawPixels(width, height, GL_RGB, GL_FLOAT, _colorData.get());
 	}
