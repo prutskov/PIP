@@ -21,6 +21,7 @@ CVideoEffectsDlg::CVideoEffectsDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_VIDEOEFFECTS_DIALOG, pParent)
 	, _accType(FALSE)
 	, _offThread(false)
+	, _algType(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -31,6 +32,7 @@ void CVideoEffectsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_RADIO_CL, _accType);
 	DDX_Control(pDX, IDC_COMBO_DEV, _deviceNames);
 	DDX_Control(pDX, IDC_IMG_SIZE, _ctrlImgSize);
+	DDX_Radio(pDX, IDC_RADIO_NONE, _algType);
 }
 
 BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
@@ -115,7 +117,7 @@ HCURSOR CVideoEffectsDlg::OnQueryDragIcon()
 void CVideoEffectsDlg::OnBnClickedApply()
 {
 	UpdateData(TRUE);
-	
+
 	if (_isImage)
 	{
 		if (cvManager->isNullImage())
@@ -123,32 +125,7 @@ void CVideoEffectsDlg::OnBnClickedApply()
 			MessageBox(L"Please, load image.", L"Warning", MB_ICONINFORMATION);
 			return;
 		}
-
-		std::shared_ptr<algorithms::Algorithm> algorithm;
-		algorithms::ParameterIface *parameter;
-		if (_accType == 0)
-		{
-			algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm >(new algorithms::median_filter::opencl::Algorithm());
-			parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3, _deviceNames.GetCurSel());
-
-		}
-		else if (_accType == 1)
-		{
-			algorithm = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
-			parameter = new algorithms::median_filter::Parameter();
-		}
-		algorithm->setParameter(parameter);
-		algorithm->setFrame(cvManager->getImage());
-
-
-		//algorithm->generateNoise(30 / 100.0F);
-
-		_imgViewer.setFrame(algorithm->getFrame());
-		_imgViewer.show();
-		float duration = algorithm->compute();
-
-		_imgViewer.setFrame(algorithm->getFrame());
-		_imgViewer.show();
+		imageFlow();
 	}
 	else
 	{
@@ -263,33 +240,103 @@ std::string CVideoEffectsDlg::getVideoPath()
 
 void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 {
-	std::shared_ptr<algorithms::Algorithm> algorithm;
-	algorithms::ParameterIface *parameter;
-	if (_accType == 0)
+	if (_algType != 0)
 	{
-		algorithm = std::shared_ptr < algorithms::median_filter::opencl::Algorithm >(new algorithms::median_filter::opencl::Algorithm());
-		parameter = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK5X5, _deviceNames.GetCurSel());
+		std::shared_ptr<algorithms::Algorithm> algorithm;
+		setAlgParameters(algorithm);
 
+		for (;;)
+		{
+			cv::Mat frame;
+			video >> frame; // get a new frame from camera
+			algorithm->setFrame(cvManager->convertToPtr(frame.clone()));
+			//algorithm->generateNoise( 30/ 100.0F);
+			algorithm->compute();
+			EnterCriticalSection(&cs);
+			_imgViewer.setFrame(algorithm->getFrame());
+			LeaveCriticalSection(&cs);
+			if (_offThread) break;
+		}
 	}
-	else if (_accType == 1)
+	else
 	{
-		algorithm = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
-		parameter = new algorithms::median_filter::Parameter();
+		for (;;)
+		{
+			cv::Mat frame;
+			video >> frame; // get a new frame from camera
+			EnterCriticalSection(&cs);
+			_imgViewer.setFrame(cvManager->convertToPtr(frame.clone()));
+			LeaveCriticalSection(&cs);
+			if (_offThread) break;
+		}
 	}
 
-	algorithm->setParameter(parameter);
-	for (;;)
+}
+
+void CVideoEffectsDlg::imageFlow()
+{
+	if (_algType != 0)
 	{
-		cv::Mat frame;
-		video >> frame; // get a new frame from camera
-		algorithm->setFrame(cvManager->convertToPtr(frame.clone()));
-		algorithm->generateNoise(50 / 100.0F);
-		algorithm->compute();
-		EnterCriticalSection(&cs);
+		std::shared_ptr<algorithms::Algorithm> algorithm;
+		setAlgParameters(algorithm);
+		algorithm->setFrame(cvManager->getImage());
+
+		algorithm->generateNoise(30 / 100.0F);
+
 		_imgViewer.setFrame(algorithm->getFrame());
-		LeaveCriticalSection(&cs);
-		if (_offThread) break;
+		_imgViewer.show();
+		algorithm->compute();
+
+		_imgViewer.setFrame(algorithm->getFrame());
 	}
+	else
+	{
+		_imgViewer.setFrame(cvManager->getImage());
+	}
+	_imgViewer.show();
+}
+
+void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> & alg)
+{
+	algorithms::ParameterIface *parameters;
+	const Accelerator accType = static_cast<Accelerator>(_accType);
+	const Algorithm algType = static_cast<Algorithm>(_algType);
+
+	if (accType == Accelerator::opencl)
+	{
+		switch (algType)
+		{
+		case Algorithm::median:
+			alg = std::shared_ptr<algorithms::median_filter::opencl::Algorithm>(new algorithms::median_filter::opencl::Algorithm());
+			parameters = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3, _deviceNames.GetCurSel());
+			break;
+		default:
+			break;
+		}
+
+	}
+	else if (accType == Accelerator::openmp)
+	{
+		switch (algType)
+		{
+		case Algorithm::median:
+			alg = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
+			parameters = new algorithms::median_filter::Parameter();
+			break;
+		default:
+			break;
+		}
+	}
+	else if (accType == Accelerator::tbb)
+	{
+		//TODO
+	}
+	else
+	{
+		MessageBox(L"Accelerator was not found.", L"Warning", MB_ICONWARNING);
+		return;
+	}
+	alg->setParameter(parameters);
 }
 
 

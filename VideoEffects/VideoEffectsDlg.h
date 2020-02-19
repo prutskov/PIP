@@ -7,6 +7,7 @@
 #include "utils.h"
 #include "CVManager.h"
 #include "ImageViewer.h"
+#include "enums.h"
 
 
 // Диалоговое окно CVideoEffectsDlg
@@ -43,7 +44,9 @@ public:
 	void loadImage();
 	std::string getVideoPath();
 	void videoFlow(cv::VideoCapture & video);
+	void imageFlow();
 	cv::VideoCapture _videoCapture;
+	void setAlgParameters(std::shared_ptr<algorithms::Algorithm>& alg);
 
 private:
 	CVManager* cvManager;
@@ -51,6 +54,7 @@ private:
 	CRect _imgSurface;
 
 	BOOL _accType;
+	BOOL _algType;
 	CComboBox _deviceNames;
 
 	HANDLE hThreadCompute;

@@ -190,6 +190,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CVManager.h" />
+    <ClInclude Include="enums.h" />
     <ClInclude Include="ImageViewer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
