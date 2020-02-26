@@ -189,9 +189,11 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CParameterDlg.h" />
     <ClInclude Include="CVManager.h" />
     <ClInclude Include="enums.h" />
     <ClInclude Include="ImageViewer.h" />
+    <ClInclude Include="parameters.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -199,6 +201,7 @@
     <ClInclude Include="VideoEffectsDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CParameterDlg.cpp" />
     <ClCompile Include="CVManager.cpp" />
     <ClCompile Include="ImageViewer.cpp" />
     <ClCompile Include="stdafx.cpp">

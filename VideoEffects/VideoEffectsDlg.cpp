@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "VideoEffects.h"
 #include "VideoEffectsDlg.h"
+#include "CParameterDlg.h"
 #include "afxdialogex.h"
 
 #ifdef _DEBUG
@@ -44,6 +45,7 @@ BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_OPEN_CAMERA, &CVideoEffectsDlg::OnBnClickedOpenCamera)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_STOP, &CVideoEffectsDlg::OnBnClickedStop)
+	ON_BN_CLICKED(IDC_BTN_PARAMETERS, &CVideoEffectsDlg::OnBnClickedBtnParameters)
 END_MESSAGE_MAP()
 
 
@@ -308,7 +310,7 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 		{
 		case Algorithm::median:
 			alg = std::shared_ptr<algorithms::median_filter::opencl::Algorithm>(new algorithms::median_filter::opencl::Algorithm());
-			parameters = new algorithms::median_filter::Parameter(algorithms::median_filter::Mask::MASK3X3, _deviceNames.GetCurSel());
+			parameters = new algorithms::median_filter::Parameter(params.medianFilterMask, _deviceNames.GetCurSel());
 			break;
 		default:
 			break;
@@ -321,7 +323,7 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 		{
 		case Algorithm::median:
 			alg = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
-			parameters = new algorithms::median_filter::Parameter();
+			parameters = new algorithms::median_filter::Parameter(params.medianFilterMask);
 			break;
 		default:
 			break;
@@ -389,4 +391,13 @@ void CVideoEffectsDlg::OnBnClickedStop()
 {
 	_offThread = true;
 	KillTimer(1);
+}
+
+
+void CVideoEffectsDlg::OnBnClickedBtnParameters()
+{
+	CParameterDlg parametersDlg;
+	parametersDlg.params = params;
+	parametersDlg.DoModal();
+	params = parametersDlg.params;
 }
