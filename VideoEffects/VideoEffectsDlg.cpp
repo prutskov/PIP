@@ -353,6 +353,23 @@ void CVideoEffectsDlg::OnBnClickedOpenVideo()
 		MessageBox(L"Video is not open!", L"Warning", MB_ICONWARNING);
 		return;
 	}
+
+	{
+		cv::Mat frameMat;
+		_videoCapture >> frameMat;
+
+		Frame image = cvManager->convertToPtr(frameMat.clone());
+
+		const size_t width = image.nCols;
+		const size_t height = image.nRows;
+
+		CString str("Resolution: ");
+		CString  arg1, arg2;
+		arg1.Format(_T("%lu"), width);
+		arg2.Format(_T("%lu"), height);
+		str += arg1 + "x" + arg2;
+		_ctrlImgSize.SetWindowTextW(str);
+	}
 }
 
 
@@ -362,10 +379,28 @@ void CVideoEffectsDlg::OnBnClickedOpenCamera()
 	_isImage = false;
 	_offThread = true;
 	_videoCapture = cv::VideoCapture(0);
+
 	if (!_videoCapture.isOpened())
 	{
 		MessageBox(L"Camera is not open!", L"Warning", MB_ICONWARNING);
 		return;
+	}
+
+	{
+		cv::Mat frameMat;
+		_videoCapture >> frameMat;
+
+		Frame image = cvManager->convertToPtr(frameMat.clone());
+
+		const size_t width = image.nCols;
+		const size_t height = image.nRows;
+
+		CString str("Resolution: ");
+		CString  arg1, arg2;
+		arg1.Format(_T("%lu"), width);
+		arg2.Format(_T("%lu"), height);
+		str += arg1 + "x" + arg2;
+		_ctrlImgSize.SetWindowTextW(str);
 	}
 }
 
