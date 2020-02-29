@@ -76,8 +76,8 @@ namespace algorithms
 			void Algorithm::compute3x3()
 			{
 				utils::Frame result = _frame.clone();
-				const int nRows = result.nRows;
-				const int nCols = result.nCols;
+				const int nRows = static_cast<int>(result.nRows);
+				const int nCols = static_cast<int>(result.nCols);
 
 				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0]);
 
@@ -129,8 +129,8 @@ namespace algorithms
 			void Algorithm::compute5x5()
 			{
 				utils::Frame result = _frame.clone();
-				const int nRows = result.nRows;
-				const int nCols = result.nCols;
+				const int nRows = static_cast<int>(result.nRows);
+				const int nCols = static_cast<int>(result.nCols);
 
 				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0]);
 

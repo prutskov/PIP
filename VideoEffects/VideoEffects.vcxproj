@@ -98,8 +98,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug;$(SolutionDir)lib\opencv\lib;$(INTELOCLSDKROOT)lib\x64;$(SolutionDir)lib\opengl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>utils.lib;algorithms.lib;opencv_world401d.lib;glut32.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug;$(SolutionDir)lib\opencv\lib;$(INTELOCLSDKROOT)lib\x64;$(SolutionDir)lib\opengl\lib;$(SolutionDir)lib\tbb\lib\intel64\vc14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>utils.lib;algorithms.lib;opencv_world401d.lib;glut32.lib;tbb_debug.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -174,8 +174,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)x64\Release;$(SolutionDir)lib\opencv\lib;$(INTELOCLSDKROOT)lib\x64;$(SolutionDir)lib\opengl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>utils.lib;algorithms.lib;opencv_world401.lib;glut.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)x64\Release;$(SolutionDir)lib\opencv\lib;$(INTELOCLSDKROOT)lib\x64;$(SolutionDir)lib\opengl\lib;$(SolutionDir)lib\tbb\lib\intel64\vc14;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>utils.lib;algorithms.lib;opencv_world401.lib;glut.lib;tbb.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
