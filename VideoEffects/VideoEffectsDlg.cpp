@@ -283,7 +283,7 @@ void CVideoEffectsDlg::imageFlow()
 		setAlgParameters(algorithm);
 		algorithm->setFrame(cvManager->getImage());
 
-		algorithm->generateNoise(30 / 100.0F);
+		//algorithm->generateNoise(30 / 100.0F);
 
 		_imgViewer.setFrame(algorithm->getFrame());
 		_imgViewer.show();
@@ -324,6 +324,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 		case Algorithm::median:
 			alg = std::shared_ptr<algorithms::median_filter::openmp::Algorithm>(new algorithms::median_filter::openmp::Algorithm());
 			parameters = new algorithms::median_filter::Parameter(params.medianFilterMask);
+			break;
+		case Algorithm::gauss:
+			alg = std::shared_ptr<algorithms::gaussian_filter::openmp::Algorithm>(new algorithms::gaussian_filter::openmp::Algorithm());
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma);
 			break;
 		default:
 			break;

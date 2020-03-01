@@ -39,6 +39,12 @@
     <ClInclude Include="median_filter\parameter_median_filter.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="gaussian_filter\parameter_gaussian_filter.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,6 +60,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="median_filter\tbb\algorithm_median_filter_tbb.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

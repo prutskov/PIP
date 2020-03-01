@@ -9,5 +9,6 @@ enum class Accelerator
 enum class Algorithm
 {
 	none,
-	median
+	median,
+	gauss
 };

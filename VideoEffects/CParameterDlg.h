@@ -22,9 +22,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	Parameters params;
-	BOOL _medianFilterMask;
 	afx_msg void OnBnClickedBtnApply();
 	virtual BOOL OnInitDialog();
 private:
 	void setParameters();
+public:
+	BOOL _medianFilterMask;
+	float _gaussSigma;
+	size_t _gaussMaskSize;
 };

@@ -18,8 +18,9 @@ namespace algorithms
 				virtual ~Algorithm();
 			private:
 				void generateGaussianKernel();
-				void median3x3(int x, int y, const Frame& frame, Frame& result, int indexRes);
-				void firstDirectionCompute(Frame & frame);
+				void horizDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
+				void verticDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
+				void directionsCompute();
 				void compute3x3();
 
 				std::vector<float> gaussKernel;

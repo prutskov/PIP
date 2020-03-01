@@ -1,9 +1,9 @@
-#define _USE_MATH_DEFINES
-
 #include "stdafx.h"
+
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "algorithm_gaussian_filter_openmp.h"
 #include <algorithm>
-#include <cmath>
 #include <algorithm>
 #include <numeric>
 
@@ -28,10 +28,11 @@ namespace algorithms
 				const float sqrSigma = 2.f * sigma * sigma;
 				float sum = 0.f;
 
-				for (int i = -maskSize / 2; i < maskSize / 2; ++i)
+				int shift = static_cast<int>(maskSize / 2);
+				for (int i = -shift; i <= shift; ++i)
 				{
 					const float r = static_cast<float>(i*i);
-					gaussKernel[i + maskSize / 2] = exp(-r / sqrSigma) / sqrSigma / M_PI;
+					gaussKernel[i + maskSize / 2] = static_cast<float>(exp(-r / sqrSigma) / sqrSigma / M_PI);
 					sum += gaussKernel[i + maskSize / 2];
 				}
 
@@ -49,42 +50,23 @@ namespace algorithms
 			}
 
 			float Algorithm::compute()
-			{
-				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
-
+			{				
+				directionsCompute();
 				return 0.0F;
 			}
 
 
-			void Algorithm::compute3x3()
-			{
-				Frame result = _frame.clone();
-				const int nRows = static_cast<int>(result.nRows);
-				const int nCols = static_cast<int>(result.nCols);
-
-#pragma omp parallel for
-				for (int i = 1; i < nRows - 1; i++)
-				{
-					for (int j = 1; j < nCols - 1; j++)
-					{
-						median3x3(j, i, _frame, result, i*nCols + j);
-					}
-				}
-
-				_frame = result;
-			}
-
-
-			void Algorithm::median3x3(int x, int y, const Frame& frame, Frame& result, int indexRes)
+			void Algorithm::horizDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes)
 			{
 				const size_t maskSize = gaussKernel.size();
 
 				std::vector<size_t> indexes;
 
-				/**Get mask of indexes*/
-				for (int i = -maskSize / 2; i < maskSize / 2; ++i)
+				int shift = static_cast<int>(maskSize / 2);
+
+				for (int i = -shift; i <= shift; ++i)
 				{
-					indexes.emplace_back(y*frame.nCols + i);
+					indexes.push_back(y*frame.nCols + i + x);
 				}
 
 				std::vector<float> vecR;
@@ -99,24 +81,63 @@ namespace algorithms
 					vecB.emplace_back(frame.dataBPtr[indexes[i]] * gaussKernel[i]);
 				}
 				
-				result.dataRPtr[indexRes] = std::accumulate(vecR.begin(), vecR.end(), 0);
-				result.dataGPtr[indexRes] = std::accumulate(vecG.begin(), vecG.end(), 0);
-				result.dataBPtr[indexRes] = std::accumulate(vecB.begin(), vecB.end(), 0);
+				result.dataRPtr[indexRes] = std::accumulate(vecR.begin(), vecR.end(), 0.f);
+				result.dataGPtr[indexRes] = std::accumulate(vecG.begin(), vecG.end(), 0.f);
+				result.dataBPtr[indexRes] = std::accumulate(vecB.begin(), vecB.end(), 0.f);
 			}
 
-			void Algorithm::firstDirectionCompute(Frame & frame)
+			void Algorithm::verticDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes)
+			{
+				const size_t maskSize = gaussKernel.size();
+
+				std::vector<size_t> indexes;
+
+				int shift = static_cast<int>(maskSize / 2);
+
+				for (int i = -shift; i <= shift; ++i)
+				{
+					indexes.push_back((y + i)*frame.nCols + x);
+				}
+
+				std::vector<float> vecR;
+				std::vector<float> vecG;
+				std::vector<float> vecB;
+
+				/**Convolution*/
+				for (int i = 0; i < maskSize; i++)
+				{
+					vecR.emplace_back(frame.dataRPtr[indexes[i]] * gaussKernel[i]);
+					vecG.emplace_back(frame.dataGPtr[indexes[i]] * gaussKernel[i]);
+					vecB.emplace_back(frame.dataBPtr[indexes[i]] * gaussKernel[i]);
+				}
+
+				result.dataRPtr[indexRes] = std::accumulate(vecR.begin(), vecR.end(), 0.f);
+				result.dataGPtr[indexRes] = std::accumulate(vecG.begin(), vecG.end(), 0.f);
+				result.dataBPtr[indexRes] = std::accumulate(vecB.begin(), vecB.end(), 0.f);
+			}
+
+			void Algorithm::directionsCompute()
 			{
 				Frame partialResult = _frame.clone();
 				const int nRows = static_cast<int>(partialResult.nRows);
 				const int nCols = static_cast<int>(partialResult.nCols);
-				const int offset = gaussKernel.size() / 2;
+				const int offset = static_cast<int>(gaussKernel.size() / 2);
 
 #pragma omp parallel for
 				for (int i = 0; i < nRows; i++)
 				{
 					for (int j = offset; j < nCols - offset; j++)
 					{
-						median3x3(j, i, _frame, partialResult, i*nCols + j);
+						horizDirectionCompute(j, i, _frame, partialResult, i*nCols + j);
+					}
+				}
+
+#pragma omp parallel for
+				for (int i = offset; i < nRows - offset; i++)
+				{
+					for (int j = 0; j < nCols; j++)
+					{
+						verticDirectionCompute(j, i, partialResult, _frame, i*nCols + j);
 					}
 				}
 			}
