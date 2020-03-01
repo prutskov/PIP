@@ -1,10 +1,11 @@
 #pragma once
 #include "../../Algorithm.h"
-#include "../Parameter.h"
+#include "../parameter_gaussian_filter.h"
+#include <vector>
 
 namespace algorithms
 {
-	namespace median_filter
+	namespace gaussian_filter
 	{
 		namespace openmp
 		{
@@ -13,13 +14,15 @@ namespace algorithms
 			public:
 				Algorithm();
 				float compute() override;
+				void setParameter(ParameterIface *parameter) override;
 				virtual ~Algorithm();
 			private:
-				void quickSort(float* data, int size);
+				void generateGaussianKernel();
 				void median3x3(int x, int y, const Frame& frame, Frame& result, int indexRes);
-				void median5x5(int x, int y, const Frame& frame, Frame& result, int indexRes);
+				void firstDirectionCompute(Frame & frame);
 				void compute3x3();
-				void compute5x5();
+
+				std::vector<float> gaussKernel;
 			};
 		}
 	}
