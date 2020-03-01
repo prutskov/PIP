@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Algorithm.h"
-#include "../Parameter.h"
+#include "../parameter_median_filter.h"
 
 namespace algorithms
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "median_filter/parameter.h"
+#include "median_filter/parameter_median_filter.h"
 
 struct Parameters
 {

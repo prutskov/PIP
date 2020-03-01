@@ -5,7 +5,7 @@
 #include "VideoEffects.h"
 #include "CParameterDlg.h"
 #include "afxdialogex.h"
-#include "median_filter/parameter.h"
+#include "median_filter/parameter_median_filter.h"
 
 
 // Диалоговое окно CParameterDlg

@@ -169,7 +169,7 @@
     <ClInclude Include="algorithms.h" />
     <ClInclude Include="median_filter\opencl\algorithm_median_filter_opencl.h" />
     <ClInclude Include="median_filter\openmp\algorithm_median_filter_openmp.h" />
-    <ClInclude Include="median_filter\parameter.h" />
+    <ClInclude Include="median_filter\parameter_median_filter.h" />
     <ClInclude Include="median_filter\tbb\algorithm_median_filter_tbb.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
