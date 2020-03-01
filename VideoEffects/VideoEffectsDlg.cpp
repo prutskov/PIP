@@ -341,6 +341,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			alg = std::shared_ptr<algorithms::median_filter::tbb::Algorithm>(new algorithms::median_filter::tbb::Algorithm());
 			parameters = new algorithms::median_filter::Parameter(params.medianFilterMask);
 			break;
+		case Algorithm::gauss:
+			alg = std::shared_ptr<algorithms::gaussian_filter::tbb::Algorithm>(new algorithms::gaussian_filter::tbb::Algorithm());
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma);
+			break;
 		default:
 			break;
 		}

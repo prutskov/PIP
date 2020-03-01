@@ -2,15 +2,17 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include "algorithm_gaussian_filter_openmp.h"
+#include "algorithm_gaussian_filter_tbb.h"
 #include <algorithm>
 #include <numeric>
+#include "tbb/parallel_for.h"
+#include "tbb/blocked_range2d.h"
 
 namespace algorithms
 {
 	namespace gaussian_filter
 	{
-		namespace openmp
+		namespace tbb
 		{
 			Algorithm::Algorithm() {}
 
@@ -49,7 +51,7 @@ namespace algorithms
 			}
 
 			float Algorithm::compute()
-			{				
+			{
 				directionsCompute();
 				return 0.0F;
 			}
@@ -79,7 +81,7 @@ namespace algorithms
 					vecG.emplace_back(frame.dataGPtr[indexes[i]] * gaussKernel[i]);
 					vecB.emplace_back(frame.dataBPtr[indexes[i]] * gaussKernel[i]);
 				}
-				
+
 				result.dataRPtr[indexRes] = std::accumulate(vecR.begin(), vecR.end(), 0.f);
 				result.dataGPtr[indexRes] = std::accumulate(vecG.begin(), vecG.end(), 0.f);
 				result.dataBPtr[indexRes] = std::accumulate(vecB.begin(), vecB.end(), 0.f);
@@ -122,25 +124,31 @@ namespace algorithms
 				const int nCols = static_cast<int>(partialResult.nCols);
 				const int offset = static_cast<int>(gaussKernel.size() / 2);
 
-#pragma omp parallel for
-				for (int i = 0; i < nRows; i++)
+				::tbb::parallel_for(::tbb::blocked_range2d<int>(0, nRows, offset, nCols - offset),
+					[&](::tbb::blocked_range2d<int> r)
 				{
-					for (int j = offset; j < nCols - offset; j++)
+					for (int i = r.rows().begin(); i != r.rows().end(); ++i)
 					{
-						horizDirectionCompute(j, i, _frame, partialResult, i*nCols + j);
+						for (int j = r.cols().begin(); j != r.cols().end(); ++j)
+						{
+							horizDirectionCompute(j, i, _frame, partialResult, i*nCols + j);
+						}
 					}
-				}
+				});
 
-#pragma omp parallel for
-				for (int i = offset; i < nRows - offset; i++)
+				::tbb::parallel_for(::tbb::blocked_range2d<int>(offset, nRows - offset, 0, nCols),
+					[&](::tbb::blocked_range2d<int> r)
 				{
-					for (int j = 0; j < nCols; j++)
+					for (int i = r.rows().begin(); i != r.rows().end(); ++i)
 					{
-						verticDirectionCompute(j, i, partialResult, _frame, i*nCols + j);
+						for (int j = r.cols().begin(); j != r.cols().end(); ++j)
+						{
+							verticDirectionCompute(j, i, partialResult, _frame, i*nCols + j);
+						}
 					}
-				}
+				});
 			}
-		}
 
+		}
 	}
 }

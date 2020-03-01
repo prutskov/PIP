@@ -45,6 +45,9 @@
     <ClInclude Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="gaussian_filter\tbb\algorithm_gaussian_filter_tbb.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +66,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="gaussian_filter\tbb\algorithm_gaussian_filter_tbb.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

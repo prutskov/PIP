@@ -7,7 +7,7 @@ namespace algorithms
 {
 	namespace gaussian_filter
 	{
-		namespace openmp
+		namespace tbb
 		{
 			class Algorithm : public algorithms::Algorithm
 			{
