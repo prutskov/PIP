@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="algorithm.h" />
     <ClInclude Include="algorithms.h" />
+    <ClInclude Include="gaussian_filter\opencl\algorithm_gaussian_filter_opencl.h" />
     <ClInclude Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.h" />
     <ClInclude Include="gaussian_filter\parameter_gaussian_filter.h" />
     <ClInclude Include="gaussian_filter\tbb\algorithm_gaussian_filter_tbb.h" />
@@ -179,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="algorithm.cpp" />
+    <ClCompile Include="gaussian_filter\opencl\algorithm_gaussian_filter_opencl.cpp" />
     <ClCompile Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.cpp" />
     <ClCompile Include="gaussian_filter\tbb\algorithm_gaussian_filter_tbb.cpp" />
     <ClCompile Include="median_filter\opencl\algorithm_median_filter_opencl.cpp" />
