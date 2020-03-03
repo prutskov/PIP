@@ -79,6 +79,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="median_filter\opencl\kernels\nativeBitonic.cl" />
+    <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
   </ItemGroup>
 </Project>

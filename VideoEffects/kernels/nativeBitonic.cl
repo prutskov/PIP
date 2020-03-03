@@ -43,8 +43,7 @@ inline void bitonicSort5x5(float* a, int size)
 
 
 inline void getMedian3x3(const int x, const int y, const int nRows, const int nCols, const int indexRes,
-	__global const float* imageRIn, __global const float* imageGIn, __global const float* imageBIn,
-	__global float* imageROut, __global float* imageGOut, __global float* imageBOut)
+	__global const float* imageIn, __global float* imageOut)
 {
 	/*Indexes from original frame for mask*/
 	int indexes[9] = { (y - 1)*nCols + x - 1,
@@ -58,29 +57,20 @@ inline void getMedian3x3(const int x, const int y, const int nRows, const int nC
 					   (y + 1)*nCols + x + 1 };
 
 	/*Get submatrix from filter-mask*/
-	float matrixForSortingR[9];
-	float matrixForSortingG[9];
-	float matrixForSortingB[9];
+	float matrixForSorting[9];
 	for (int i = 0; i < 9; i++)
 	{
-		matrixForSortingR[i] = imageRIn[indexes[i]];
-		matrixForSortingG[i] = imageGIn[indexes[i]];
-		matrixForSortingB[i] = imageBIn[indexes[i]];
+		matrixForSorting[i] = imageIn[indexes[i]];
 	}
 
 	/*Sorting array*/
-	bitonicSort3x3(matrixForSortingR, 9);
-	bitonicSort3x3(matrixForSortingG, 9);
-	bitonicSort3x3(matrixForSortingB, 9);
+	bitonicSort3x3(matrixForSorting, 9);
 
-	imageROut[indexRes] = matrixForSortingR[4];
-	imageGOut[indexRes] = matrixForSortingG[4];
-	imageBOut[indexRes] = matrixForSortingB[4];
+	imageOut[indexRes] = matrixForSorting[4];
 }
 
 inline void getMedian5x5(const int x, const int y, const int nRows, const int nCols, const int indexRes,
-	__global const float* imageRIn, __global const float* imageGIn, __global const float* imageBIn,
-	__global float* imageROut, __global float* imageGOut, __global float* imageBOut)
+	__global const float* imageIn, 	__global float* imageOut)
 {
 	/*Indexes from original frame for mask*/
 	int indexes[25] = { (y - 2)*nCols + x - 2,
@@ -110,52 +100,39 @@ inline void getMedian5x5(const int x, const int y, const int nRows, const int nC
 							  (y + 2)*nCols + x + 2 };
 
 	/*Get submatrix from filter-mask*/
-	float matrixForSortingR[25];
-	float matrixForSortingG[25];
-	float matrixForSortingB[25];
+	float matrixForSorting[25];
 
 	for (int i = 0; i < 25; i++)
 	{
-		matrixForSortingR[i] = imageRIn[indexes[i]];
-		matrixForSortingG[i] = imageGIn[indexes[i]];
-		matrixForSortingB[i] = imageBIn[indexes[i]];
+		matrixForSorting[i] = imageIn[indexes[i]];
 	}
 
 	/*Sorting array*/
-	bitonicSort5x5(matrixForSortingR, 25);
-	bitonicSort5x5(matrixForSortingG, 25);
-	bitonicSort5x5(matrixForSortingB, 25);
+	bitonicSort5x5(matrixForSorting, 25);
 
-	imageROut[indexRes] = matrixForSortingR[12];
-	imageGOut[indexRes] = matrixForSortingG[12];
-	imageBOut[indexRes] = matrixForSortingB[12];
+	imageOut[indexRes] = matrixForSorting[12];
 }
 
 __kernel void nativeFilter3x3(const int nRows, const int nCols,
-	__global const float* imageRIn, __global const float* imageGIn, __global const float* imageBIn,
-	__global float* imageROut, __global float* imageGOut, __global float* imageBOut)
+	__global const float* imageIn, __global float* imageOut)
 {
 	int rowIdx = get_global_id(0);
 	int colIdx = get_global_id(1);
 
 	if (((rowIdx > 0) && (rowIdx < (nRows - 1))) && ((colIdx > 0) && (colIdx < (nCols - 1))))
 	{
-		getMedian3x3(colIdx, rowIdx, nRows, nCols, rowIdx*nCols + colIdx, imageRIn, imageGIn, imageBIn,
-			imageROut, imageGOut, imageBOut);
+		getMedian3x3(colIdx, rowIdx, nRows, nCols, rowIdx*nCols + colIdx, imageIn, imageOut);
 	}
 }
 
 __kernel void nativeFilter5x5(const int nRows, const int nCols,
-	__global const float* imageRIn, __global const float* imageGIn, __global const float* imageBIn,
-	__global float* imageROut, __global float* imageGOut, __global float* imageBOut)
+	__global const float* imageIn, __global float* imageOut)
 {
 	int rowIdx = get_global_id(0);
 	int colIdx = get_global_id(1);
 
 	if (((rowIdx > 1) && (rowIdx < (nRows - 2))) && ((colIdx > 1) && (colIdx < (nCols - 2))))
 	{
-		getMedian5x5(colIdx, rowIdx, nRows, nCols, rowIdx*nCols + colIdx,
-			imageRIn, imageGIn, imageBIn,
-			imageROut, imageGOut, imageBOut);
+		getMedian5x5(colIdx, rowIdx, nRows, nCols, rowIdx*nCols + colIdx, imageIn, imageOut);
 	}
 }

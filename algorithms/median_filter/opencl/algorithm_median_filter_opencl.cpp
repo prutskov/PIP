@@ -86,7 +86,7 @@ namespace algorithms
 				const int nRows = static_cast<int>(result.nRows);
 				const int nCols = static_cast<int>(result.nCols);
 
-				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0]);
+				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0], CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE);
 
 				cl::Buffer imageRIn = cl::Buffer(_context,
 					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
@@ -112,18 +112,28 @@ namespace algorithms
 					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
 					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
 
-				cl::Kernel kernel(_program, "nativeFilter3x3");
+				cl::Kernel kernelR(_program, "nativeFilter3x3");
+				cl::Kernel kernelG(_program, "nativeFilter3x3");
+				cl::Kernel kernelB(_program, "nativeFilter3x3");
 
-				kernel.setArg(0, nRows);
-				kernel.setArg(1, nCols);
-				kernel.setArg(2, imageRIn);
-				kernel.setArg(3, imageGIn);
-				kernel.setArg(4, imageBIn);
-				kernel.setArg(5, imageROut);
-				kernel.setArg(6, imageGOut);
-				kernel.setArg(7, imageBOut);
+				kernelR.setArg(0, nRows);
+				kernelR.setArg(1, nCols);
+				kernelR.setArg(2, imageRIn);
+				kernelR.setArg(3, imageROut);
 
-				comqueque.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
+				kernelG.setArg(0, nRows);
+				kernelG.setArg(1, nCols);
+				kernelG.setArg(2, imageGIn);
+				kernelG.setArg(3, imageGOut);
+
+				kernelB.setArg(0, nRows);
+				kernelB.setArg(1, nCols);
+				kernelB.setArg(2, imageBIn);
+				kernelB.setArg(3, imageBOut);
+
+				comqueque.enqueueNDRangeKernel(kernelR, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
+				comqueque.enqueueNDRangeKernel(kernelG, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
+				comqueque.enqueueNDRangeKernel(kernelB, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
 				comqueque.finish();
 
 				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataRPtr.get());
@@ -139,7 +149,7 @@ namespace algorithms
 				const int nRows = static_cast<int>(result.nRows);
 				const int nCols = static_cast<int>(result.nCols);
 
-				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0]);
+				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0], CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE);
 
 				cl::Buffer imageRIn = cl::Buffer(_context,
 					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
@@ -165,18 +175,28 @@ namespace algorithms
 					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
 					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
 
-				cl::Kernel kernel(_program, "nativeFilter5x5");
+				cl::Kernel kernelR(_program, "nativeFilter5x5");
+				cl::Kernel kernelG(_program, "nativeFilter5x5");
+				cl::Kernel kernelB(_program, "nativeFilter5x5");
 
-				kernel.setArg(0, nRows);
-				kernel.setArg(1, nCols);
-				kernel.setArg(2, imageRIn);
-				kernel.setArg(3, imageGIn);
-				kernel.setArg(4, imageBIn);
-				kernel.setArg(5, imageROut);
-				kernel.setArg(6, imageGOut);
-				kernel.setArg(7, imageBOut);
+				kernelR.setArg(0, nRows);
+				kernelR.setArg(1, nCols);
+				kernelR.setArg(2, imageRIn);
+				kernelR.setArg(3, imageROut);
 
-				comqueque.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
+				kernelG.setArg(0, nRows);
+				kernelG.setArg(1, nCols);
+				kernelG.setArg(2, imageGIn);
+				kernelG.setArg(3, imageGOut);
+
+				kernelB.setArg(0, nRows);
+				kernelB.setArg(1, nCols);
+				kernelB.setArg(2, imageBIn);
+				kernelB.setArg(3, imageBOut);
+
+				comqueque.enqueueNDRangeKernel(kernelR, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
+				comqueque.enqueueNDRangeKernel(kernelG, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
+				comqueque.enqueueNDRangeKernel(kernelB, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
 				comqueque.finish();
 
 				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataRPtr.get());
