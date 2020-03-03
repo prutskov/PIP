@@ -45,6 +45,12 @@
     <ClInclude Include="parameters.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="benchmark.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="CBenchmark.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VideoEffects.cpp">
@@ -63,6 +69,12 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="CParameterDlg.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="benchmark.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="CBenchmark.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

@@ -19,7 +19,6 @@ namespace algorithms
 				activeDevice = device;
 			}
 			Mask mask = Mask::MASK3X3;
-			size_t activeDevice = 0;
 		};
 	}
 }

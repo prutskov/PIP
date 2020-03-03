@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CVManager.h"
+#include <memory>
 
 void CVManager::loadImage(std::string path, int flag)
 {
@@ -77,5 +78,25 @@ Frame CVManager::getImage()
 {
 	_imagePtr = convertToPtr(_loadedImage);
 	return _imagePtr;
+}
+
+Frame CVManager::generateFrame(size_t nRows, size_t nCols)
+{
+	Frame frame(nRows, nCols,
+		std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+		std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+		std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()));
+
+	for (int i = 0; i < nRows; i++)
+	{
+		for (int j = 0; j < nCols; j++)
+		{
+			frame.dataBPtr[i*nCols + j] = static_cast<float>(rand() % 256);
+			frame.dataGPtr[i*nCols + j] = static_cast<float>(rand() % 256);
+			frame.dataRPtr[i*nCols + j] = static_cast<float>(rand() % 256);
+		}
+	}
+
+	return frame;
 }
 

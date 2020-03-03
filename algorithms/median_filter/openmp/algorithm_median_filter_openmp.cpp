@@ -1,6 +1,8 @@
 #include "stdafx.h"
-#include "algorithm_median_filter_openmp.h"
 #include <algorithm>
+#include <chrono>
+
+#include "algorithm_median_filter_openmp.h"
 
 namespace algorithms
 {
@@ -15,6 +17,7 @@ namespace algorithms
 			float Algorithm::compute()
 			{
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
+				auto start = std::chrono::high_resolution_clock::now();
 				if (par->mask == Mask::MASK3X3)
 				{
 					compute3x3();
@@ -23,7 +26,10 @@ namespace algorithms
 				{
 					compute5x5();
 				}
-				return 0.0F;
+				auto end = std::chrono::high_resolution_clock::now();
+				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
+
+				return duration;
 			}
 
 

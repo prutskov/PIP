@@ -1,6 +1,11 @@
 #include "stdafx.h"
-#include "algorithm_gaussian_filter_opencl.h"
+
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <algorithm>
+#include <numeric>
 #include <fstream>
+#include "algorithm_gaussian_filter_opencl.h"
 
 namespace algorithms
 {
@@ -31,6 +36,7 @@ namespace algorithms
 			{
 				_parameter = parameter;
 				buildProgram();
+				generateGaussianKernel();
 			}
 
 			void Algorithm::buildProgram()
@@ -87,14 +93,14 @@ namespace algorithms
 			float Algorithm::compute()
 			{
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
-				if (par->mask == Mask::MASK3X3)
+				/*if (par->mask == Mask::MASK3X3)
 				{
 					compute3x3();
 				}
 				else
 				{
 					compute5x5();
-				}
+				}*/
 				return 0.0F;
 			}
 
@@ -132,59 +138,6 @@ namespace algorithms
 					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
 
 				cl::Kernel kernel(_program, "nativeFilter3x3");
-
-				kernel.setArg(0, nRows);
-				kernel.setArg(1, nCols);
-				kernel.setArg(2, imageRIn);
-				kernel.setArg(3, imageGIn);
-				kernel.setArg(4, imageBIn);
-				kernel.setArg(5, imageROut);
-				kernel.setArg(6, imageGOut);
-				kernel.setArg(7, imageBOut);
-
-				comqueque.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
-				comqueque.finish();
-
-				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataRPtr.get());
-				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataGPtr.get());
-				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataBPtr.get());
-
-				_frame = result;
-			}
-
-			void Algorithm::compute5x5()
-			{
-				utils::Frame result = _frame.clone();
-				const int nRows = static_cast<int>(result.nRows);
-				const int nCols = static_cast<int>(result.nCols);
-
-				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0]);
-
-				cl::Buffer imageRIn = cl::Buffer(_context,
-					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-					(_frame.nRows*_frame.nCols) * sizeof(float), _frame.dataRPtr.get());
-
-				cl::Buffer imageGIn = cl::Buffer(_context,
-					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-					(_frame.nRows*_frame.nCols) * sizeof(float), _frame.dataGPtr.get());
-
-				cl::Buffer imageBIn = cl::Buffer(_context,
-					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-					(_frame.nRows*_frame.nCols) * sizeof(float), _frame.dataBPtr.get());
-
-				cl::Buffer imageROut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataRPtr.get());
-
-				cl::Buffer imageGOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
-
-				cl::Buffer imageBOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
-
-				cl::Kernel kernel(_program, "nativeFilter5x5");
 
 				kernel.setArg(0, nRows);
 				kernel.setArg(1, nCols);

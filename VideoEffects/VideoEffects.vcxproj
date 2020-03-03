@@ -189,6 +189,8 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="benchmark.h" />
+    <ClInclude Include="CBenchmark.h" />
     <ClInclude Include="CParameterDlg.h" />
     <ClInclude Include="CVManager.h" />
     <ClInclude Include="enums.h" />
@@ -201,6 +203,8 @@
     <ClInclude Include="VideoEffectsDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="benchmark.cpp" />
+    <ClCompile Include="CBenchmark.cpp" />
     <ClCompile Include="CParameterDlg.cpp" />
     <ClCompile Include="CVManager.cpp" />
     <ClCompile Include="ImageViewer.cpp" />

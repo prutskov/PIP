@@ -14,8 +14,6 @@ namespace algorithms
 				activeDevice = device;
 			}
 
-			size_t activeDevice = 0;
-
 			size_t maskSize = 3;
 			float sigma = 1.f;
 		};

@@ -19,6 +19,7 @@ public:
 	Frame convertToPtr(cv::Mat data);
 	cv::Mat convertToMat(Frame data);
 	Frame getImage();
+	static Frame generateFrame(size_t nRows, size_t nCols);
 
 private:
 	cv::Mat _loadedImage;

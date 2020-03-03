@@ -8,6 +8,8 @@ namespace algorithms
 {
 	struct ParameterIface
 	{
+		size_t activeDevice = 0;
+
 		virtual ~ParameterIface() {};
 	};
 

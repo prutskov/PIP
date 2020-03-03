@@ -70,6 +70,7 @@ public:
 	CStatic _ctrlImgSize;
 	afx_msg void OnBnClickedStop();
 	afx_msg void OnBnClickedBtnParameters();
+	afx_msg void OnBnClickedBench();
 };
 
 DWORD WINAPI computeThread(PVOID param);

@@ -7,6 +7,7 @@
 #include "VideoEffects.h"
 #include "VideoEffectsDlg.h"
 #include "CParameterDlg.h"
+#include "CBenchmark.h"
 #include "afxdialogex.h"
 
 #ifdef _DEBUG
@@ -46,6 +47,7 @@ BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_STOP, &CVideoEffectsDlg::OnBnClickedStop)
 	ON_BN_CLICKED(IDC_BTN_PARAMETERS, &CVideoEffectsDlg::OnBnClickedBtnParameters)
+	ON_BN_CLICKED(IDC_BENCH, &CVideoEffectsDlg::OnBnClickedBench)
 END_MESSAGE_MAP()
 
 
@@ -447,8 +449,21 @@ void CVideoEffectsDlg::OnBnClickedStop()
 
 void CVideoEffectsDlg::OnBnClickedBtnParameters()
 {
+	UpdateData(TRUE);
 	CParameterDlg parametersDlg;
 	parametersDlg.params = params;
 	parametersDlg.DoModal();
 	params = parametersDlg.params;
+	params.activeDevice = _deviceNames.GetCurSel();
+}
+
+
+void CVideoEffectsDlg::OnBnClickedBench()
+{
+	UpdateData(TRUE);
+	CBenchmark benchDlg;
+
+	params.activeDevice = _deviceNames.GetCurSel();
+	benchDlg.params = params;
+	benchDlg.DoModal();
 }
