@@ -24,7 +24,7 @@ void Benchmark::runBenchmark()
 	frames.push_back(CVManager::generateFrame(480, 640));
 	frames.push_back(CVManager::generateFrame(720, 1280));
 	frames.push_back(CVManager::generateFrame(1080, 1920));
-	frames.push_back(CVManager::generateFrame(2160, 4096));
+	//frames.push_back(CVManager::generateFrame(2160, 4096));
 
 	benchMedianFilter(frames);
 }
