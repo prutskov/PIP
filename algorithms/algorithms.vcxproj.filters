@@ -80,5 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
+    <None Include="..\VideoEffects\kernels\gauss.cl" />
   </ItemGroup>
 </Project>

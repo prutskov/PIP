@@ -7,4 +7,5 @@
 
 #include "gaussian_filter/parameter_gaussian_filter.h"
 #include "gaussian_filter/openmp/algorithm_gaussian_filter_openmp.h"
+#include "gaussian_filter/opencl/algorithm_gaussian_filter_opencl.h"
 #include "gaussian_filter/tbb/algorithm_gaussian_filter_tbb.h"
