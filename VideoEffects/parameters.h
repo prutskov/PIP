@@ -10,6 +10,6 @@ struct Parameters
 	algorithms::median_filter::Mask medianFilterMask = algorithms::median_filter::Mask::MASK3X3;
 
 	/**Gaussian filter parameters*/
-	size_t gaussFilterMask = 3;
-	float sigma = 1.f;
+	size_t gaussFilterMask = 7;
+	float sigma = 5.f;
 };

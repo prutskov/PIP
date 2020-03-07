@@ -112,15 +112,15 @@ namespace algorithms
 					(int)gaussKernel.size() * sizeof(float), gaussKernel.data());
 
 				cl::Buffer imageRIn = cl::Buffer(_context,
-					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
 					(nRows*nCols) * sizeof(float), _frame.dataRPtr.get());
 
 				cl::Buffer imageGIn = cl::Buffer(_context,
-					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
 					(nRows*nCols) * sizeof(float), _frame.dataGPtr.get());
 
 				cl::Buffer imageBIn = cl::Buffer(_context,
-					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
 					(nRows*nCols) * sizeof(float), _frame.dataBPtr.get());
 
 				cl::Buffer imageROut = cl::Buffer(_context,
@@ -138,7 +138,6 @@ namespace algorithms
 				cl::Kernel kernelHorizontR(_program, "horizDirectionKernel");
 				cl::Kernel kernelHorizontG(_program, "horizDirectionKernel");
 				cl::Kernel kernelHorizontB(_program, "horizDirectionKernel");
-
 				auto setArgs = [&](cl::Kernel& kernel, cl::Buffer& imageIn, cl::Buffer& imageOut)
 				{
 					kernel.setArg(0, nRows);
@@ -159,12 +158,23 @@ namespace algorithms
 				comqueque.enqueueNDRangeKernel(kernelHorizontG, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
 				comqueque.enqueueNDRangeKernel(kernelHorizontB, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
 				comqueque.finish();
+				
+				cl::Kernel kernelVerticR(_program, "verticDirectionKernel");
+				cl::Kernel kernelVerticG(_program, "verticDirectionKernel");
+				cl::Kernel kernelVerticB(_program, "verticDirectionKernel");
 
-				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, nRows*nCols * sizeof(float), partialResult.dataRPtr.get());
-				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, nRows*nCols * sizeof(float), partialResult.dataGPtr.get());
-				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, nRows*nCols * sizeof(float), partialResult.dataBPtr.get());
+				setArgs(kernelVerticR, imageROut, imageRIn);
+				setArgs(kernelVerticG, imageGOut, imageGIn);
+				setArgs(kernelVerticB, imageBOut, imageBIn);
 
-				_frame = partialResult;
+				comqueque.enqueueNDRangeKernel(kernelVerticR, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+				comqueque.enqueueNDRangeKernel(kernelVerticG, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+				comqueque.enqueueNDRangeKernel(kernelVerticB, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+				comqueque.finish();
+
+				comqueque.enqueueReadBuffer(imageRIn, CL_TRUE, 0, nRows*nCols * sizeof(float), _frame.dataRPtr.get());
+				comqueque.enqueueReadBuffer(imageGIn, CL_TRUE, 0, nRows*nCols * sizeof(float), _frame.dataGPtr.get());
+				comqueque.enqueueReadBuffer(imageBIn, CL_TRUE, 0, nRows*nCols * sizeof(float), _frame.dataBPtr.get());
 			}
 
 			std::vector<std::string> Algorithm::getDevices()
