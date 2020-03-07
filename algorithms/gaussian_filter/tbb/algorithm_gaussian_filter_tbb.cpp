@@ -66,61 +66,46 @@ namespace algorithms
 			void Algorithm::horizDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes)
 			{
 				const size_t maskSize = gaussKernel.size();
-
-				std::vector<size_t> indexes;
-
+				
 				int shift = static_cast<int>(maskSize / 2);
 
-				for (int i = -shift; i <= shift; ++i)
+				float sumR = 0.f;
+				float sumG = 0.f;
+				float sumB = 0.f;
+
+				for (int i = -shift, idx = 0; i <= shift; ++i, ++idx)
 				{
-					indexes.push_back(y*frame.nCols + i + x);
+					sumR += frame.dataRPtr[y*frame.nCols + i + x] * gaussKernel[idx];
+					sumG += frame.dataGPtr[y*frame.nCols + i + x] * gaussKernel[idx];
+					sumB += frame.dataBPtr[y*frame.nCols + i + x] * gaussKernel[idx];
 				}
 
-				std::vector<float> vecR;
-				std::vector<float> vecG;
-				std::vector<float> vecB;
-
-				/**Convolution*/
-				for (int i = 0; i < maskSize; i++)
-				{
-					vecR.emplace_back(frame.dataRPtr[indexes[i]] * gaussKernel[i]);
-					vecG.emplace_back(frame.dataGPtr[indexes[i]] * gaussKernel[i]);
-					vecB.emplace_back(frame.dataBPtr[indexes[i]] * gaussKernel[i]);
-				}
-
-				result.dataRPtr[indexRes] = std::accumulate(vecR.begin(), vecR.end(), 0.f);
-				result.dataGPtr[indexRes] = std::accumulate(vecG.begin(), vecG.end(), 0.f);
-				result.dataBPtr[indexRes] = std::accumulate(vecB.begin(), vecB.end(), 0.f);
+				result.dataRPtr[indexRes] = sumR;
+				result.dataGPtr[indexRes] = sumG;
+				result.dataBPtr[indexRes] = sumB;
 			}
 
 			void Algorithm::verticDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes)
 			{
 				const size_t maskSize = gaussKernel.size();
 
-				std::vector<size_t> indexes;
-
 				int shift = static_cast<int>(maskSize / 2);
 
-				for (int i = -shift; i <= shift; ++i)
+				float sumR = 0.f;
+				float sumG = 0.f;
+				float sumB = 0.f;
+
+
+				for (int i = -shift, idx = 0; i <= shift; ++i, ++idx)
 				{
-					indexes.push_back((y + i)*frame.nCols + x);
+					sumR += frame.dataRPtr[(y + i)*frame.nCols + x]*gaussKernel[idx];
+					sumG += frame.dataGPtr[(y + i)*frame.nCols + x]*gaussKernel[idx];
+					sumB += frame.dataBPtr[(y + i)*frame.nCols + x]*gaussKernel[idx];
 				}
-
-				std::vector<float> vecR;
-				std::vector<float> vecG;
-				std::vector<float> vecB;
-
-				/**Convolution*/
-				for (int i = 0; i < maskSize; i++)
-				{
-					vecR.emplace_back(frame.dataRPtr[indexes[i]] * gaussKernel[i]);
-					vecG.emplace_back(frame.dataGPtr[indexes[i]] * gaussKernel[i]);
-					vecB.emplace_back(frame.dataBPtr[indexes[i]] * gaussKernel[i]);
-				}
-
-				result.dataRPtr[indexRes] = std::accumulate(vecR.begin(), vecR.end(), 0.f);
-				result.dataGPtr[indexRes] = std::accumulate(vecG.begin(), vecG.end(), 0.f);
-				result.dataBPtr[indexRes] = std::accumulate(vecB.begin(), vecB.end(), 0.f);
+				
+				result.dataRPtr[indexRes] = sumR;
+				result.dataGPtr[indexRes] = sumG;
+				result.dataBPtr[indexRes] = sumB;
 			}
 
 			void Algorithm::directionsCompute()
