@@ -2,9 +2,11 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include "algorithm_gaussian_filter_openmp.h"
 #include <algorithm>
 #include <numeric>
+#include <chrono>
+
+#include "algorithm_gaussian_filter_openmp.h"
 
 namespace algorithms
 {
@@ -50,8 +52,12 @@ namespace algorithms
 
 			float Algorithm::compute()
 			{				
+				auto start = std::chrono::high_resolution_clock::now();
 				directionsCompute();
-				return 0.0F;
+				auto end = std::chrono::high_resolution_clock::now();
+				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
+
+				return duration;
 			}
 
 

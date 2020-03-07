@@ -22,7 +22,7 @@ namespace algorithms
 			private:
 				void buildProgram();
 				void generateGaussianKernel();
-				void compute3x3();
+				void computeImpl();
 				std::vector<std::string> getDevices() override;
 
 				std::vector<cl::Platform> _platforms;

@@ -2,11 +2,13 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include "algorithm_gaussian_filter_tbb.h"
 #include <algorithm>
 #include <numeric>
+#include <chrono>
 #include "tbb/parallel_for.h"
 #include "tbb/blocked_range2d.h"
+
+#include "algorithm_gaussian_filter_tbb.h"
 
 namespace algorithms
 {
@@ -52,8 +54,12 @@ namespace algorithms
 
 			float Algorithm::compute()
 			{
+				auto start = std::chrono::high_resolution_clock::now();
 				directionsCompute();
-				return 0.0F;
+				auto end = std::chrono::high_resolution_clock::now();
+				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
+
+				return duration;
 			}
 
 

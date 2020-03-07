@@ -26,12 +26,13 @@ void Benchmark::runBenchmark()
 	frames.push_back(CVManager::generateFrame(1080, 1920));
 	//frames.push_back(CVManager::generateFrame(2160, 4096));
 
-	benchMedianFilter(frames);
+	//benchMedianFilter(frames);
+	benchGaussFilter(frames);
 }
 
 void Benchmark::benchMedianFilter(std::vector<Frame>& frames)
 {
-	logFile << "\nMedian filter\n";
+	logFile << "\n\nMedian filter\n";
 
 	std::shared_ptr<algorithms::Algorithm> alg;
 	algorithms::ParameterIface *parameters;
@@ -106,6 +107,85 @@ void Benchmark::benchMedianFilter(std::vector<Frame>& frames)
 	}
 
 	logFile << "Used OpenCL device: " << deviceName << std::endl;
+}
+
+void Benchmark::benchGaussFilter(std::vector<Frame>& frames)
+{
+	logFile << "\n\nGauss filter\n";
+
+	std::shared_ptr<algorithms::Algorithm> alg;
+	algorithms::ParameterIface *parameters;
+
+	std::string mask = params.medianFilterMask == algorithms::median_filter::MASK3X3 ? "3x3" : "5x5";
+	logFile << "Parameters:\n" <<
+		"\t\t\tmask:  " << params.gaussFilterMask << "x" << params.gaussFilterMask << std::endl <<
+		"\t\t\tsigma: " << params.sigma << std::endl;
+	std::string deviceName;
+
+	logFile << "|    Image size    |    OpenMP    |   Intel TBB  |    OpenCL    |\n";
+	for (const Frame& frame : frames)
+	{
+		float timeOMP = 0.f;
+		float timeTBB = 0.f;
+		float timeOCL = 0.f;
+
+		{ // openmp test
+			alg = std::shared_ptr<algorithms::gaussian_filter::openmp::Algorithm>(new algorithms::gaussian_filter::openmp::Algorithm());
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask);
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeOMP += alg->compute();
+			}
+
+			timeOMP /= static_cast<float>(nIterations);
+		}
+
+		{ // tbb test
+			alg = std::shared_ptr<algorithms::gaussian_filter::tbb::Algorithm>(new algorithms::gaussian_filter::tbb::Algorithm());
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask);
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeTBB += alg->compute();
+			}
+
+			timeTBB /= static_cast<float>(nIterations);
+		}
+
+		{ // opencl test
+			alg = std::shared_ptr<algorithms::gaussian_filter::opencl::Algorithm>(new algorithms::gaussian_filter::opencl::Algorithm());
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.activeDevice);
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeOCL += alg->compute();
+			}
+
+			timeOCL /= static_cast<float>(nIterations);
+
+			deviceName = alg->getDevices()[params.activeDevice];
+		}
 
 
+		std::string resolution = std::to_string(frame.nRows) + "x" + std::to_string(frame.nCols);
+		logFile << "|";
+		logFile << std::setw(18);
+		logFile << resolution << "|";
+		logFile << std::setw(14) << timeOMP << "|";
+		logFile << std::setw(14) << timeTBB << "|";
+		logFile << std::setw(14) << timeOCL << "|";
+		logFile << std::endl;
+	}
+
+	logFile << "Used OpenCL device: " << deviceName << std::endl;
 }

@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <numeric>
 #include <fstream>
+#include <chrono>
+
 #include "algorithm_gaussian_filter_opencl.h"
 
 namespace algorithms
@@ -92,13 +94,16 @@ namespace algorithms
 
 			float Algorithm::compute()
 			{
-				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
-				compute3x3();
-				return 0.0F;
+				auto start = std::chrono::high_resolution_clock::now();
+				computeImpl();
+				auto end = std::chrono::high_resolution_clock::now();
+				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
+
+				return duration;
 			}
 
 
-			void Algorithm::compute3x3()
+			void Algorithm::computeImpl()
 			{
 				utils::Frame partialResult = _frame.clone();
 				const int nRows = static_cast<int>(partialResult.nRows);
