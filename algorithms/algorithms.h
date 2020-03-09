@@ -9,3 +9,6 @@
 #include "gaussian_filter/openmp/algorithm_gaussian_filter_openmp.h"
 #include "gaussian_filter/opencl/algorithm_gaussian_filter_opencl.h"
 #include "gaussian_filter/tbb/algorithm_gaussian_filter_tbb.h"
+
+#include "sharpness/parameter_sharpness.h"
+#include "sharpness/openmp/algorithm_sharpness_openmp.h"

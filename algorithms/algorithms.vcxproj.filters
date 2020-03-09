@@ -51,6 +51,12 @@
     <ClInclude Include="gaussian_filter\opencl\algorithm_gaussian_filter_opencl.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="sharpness\parameter_sharpness.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="sharpness\openmp\algorithm_sharpness_openmp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -75,6 +81,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="gaussian_filter\opencl\algorithm_gaussian_filter_opencl.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="sharpness\openmp\algorithm_sharpness_openmp.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
