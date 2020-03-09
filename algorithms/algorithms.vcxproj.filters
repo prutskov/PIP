@@ -72,6 +72,9 @@
     <ClInclude Include="sobel_filter\tbb\algorithm_sobel_filter_tbb.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="sobel_filter\opencl\algorithm_sobel_filter_opencl.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -113,10 +116,14 @@
     <ClCompile Include="sobel_filter\tbb\algorithm_sobel_filter_tbb.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="sobel_filter\opencl\algorithm_sobel_filter_opencl.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
     <None Include="..\VideoEffects\kernels\gauss.cl" />
     <None Include="..\VideoEffects\kernels\sharpness.cl" />
+    <None Include="..\VideoEffects\kernels\sobel.cl" />
   </ItemGroup>
 </Project>

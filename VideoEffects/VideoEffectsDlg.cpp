@@ -322,6 +322,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			alg = std::shared_ptr<algorithms::sharpness::opencl::Algorithm>(new algorithms::sharpness::opencl::Algorithm());
 			parameters = new algorithms::sharpness::Parameter(params.k, _deviceNames.GetCurSel());
 			break;
+		case Algorithm::sobel:
+			alg = std::shared_ptr<algorithms::sobel_filter::opencl::Algorithm>(new algorithms::sobel_filter::opencl::Algorithm());
+			parameters = new algorithms::sobel_filter::Parameter(_deviceNames.GetCurSel());
+			break;
 		default:
 			break;
 		}

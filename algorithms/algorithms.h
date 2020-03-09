@@ -17,4 +17,5 @@
 
 #include "sobel_filter/parameter_sobel_filter.h"
 #include "sobel_filter/openmp/algorithm_sobel_filter_openmp.h"
+#include "sobel_filter/opencl/algorithm_sobel_filter_opencl.h"
 #include "sobel_filter/tbb/algorithm_sobel_filter_tbb.h"
