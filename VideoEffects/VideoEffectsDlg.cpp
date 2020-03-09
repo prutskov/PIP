@@ -335,6 +335,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			alg = std::shared_ptr<algorithms::gaussian_filter::openmp::Algorithm>(new algorithms::gaussian_filter::openmp::Algorithm());
 			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma);
 			break;
+		case Algorithm::sharpness:
+			alg = std::shared_ptr<algorithms::sharpness::openmp::Algorithm>(new algorithms::sharpness::openmp::Algorithm());
+			parameters = new algorithms::sharpness::Parameter(params.k);
+			break;
 		default:
 			break;
 		}

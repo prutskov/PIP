@@ -12,4 +12,7 @@ struct Parameters
 	/**Gaussian filter parameters*/
 	size_t gaussFilterMask = 7;
 	float sigma = 5.f;
+
+	/**Sharpness parameters*/
+	float k = 2.f;
 };

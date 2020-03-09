@@ -30,4 +30,5 @@ public:
 	BOOL _medianFilterMask;
 	float _gaussSigma;
 	size_t _gaussMaskSize;
+	float _k;
 };

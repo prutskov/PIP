@@ -22,14 +22,16 @@
 #define IDC_BTN_PARAMETERS              1013
 #define IDC_RADIO_GAUSS                 1014
 #define IDC_RADIO_MF_3x3                1015
-#define Benchmar                        1015
 #define IDC_BENCH                       1015
 #define IDC_RADIO_MF_5x5                1016
+#define IDC_RADIO_SHARPNESS             1016
 #define IDC_BTN_APPLY                   1017
 #define IDC_GAUSS_SIZE                  1018
 #define IDC_GAUSS_SIGMA                 1019
 #define IDC_BTN_RUN_BENCHMARK           1019
 #define IDC_N_ITER                      1020
+#define IDC_GAUSS_SIGMA2                1020
+#define IDC_SHARPNESS_K                 1020
 
 // Next default values for new objects
 // 

@@ -10,5 +10,6 @@ enum class Algorithm
 {
 	none,
 	median,
-	gauss
+	gauss,
+	sharpness
 };

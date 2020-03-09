@@ -17,6 +17,7 @@ CParameterDlg::CParameterDlg(CWnd* pParent /*=nullptr*/)
 	, _medianFilterMask(FALSE)
 	, _gaussMaskSize(3)
 	, _gaussSigma(1)
+	, _k(1)
 {
 
 }
@@ -31,6 +32,7 @@ void CParameterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_RADIO_MF_3x3, _medianFilterMask);
 	DDX_Text(pDX, IDC_GAUSS_SIZE, _gaussMaskSize);
 	DDX_Text(pDX, IDC_GAUSS_SIGMA, _gaussSigma);
+	DDX_Text(pDX, IDC_SHARPNESS_K, _k);
 }
 
 
@@ -60,6 +62,9 @@ void CParameterDlg::setParameters()
 	/**Gaussian filter parameters*/
 	_gaussMaskSize = params.gaussFilterMask;
 	_gaussSigma = params.sigma;
+
+	/**Sharpness parameters*/
+	_k = params.k;
 }
 
 void CParameterDlg::OnBnClickedBtnApply()
@@ -72,6 +77,9 @@ void CParameterDlg::OnBnClickedBtnApply()
 	/**Gaussian filter parameters*/
 	params.gaussFilterMask = _gaussMaskSize;
 	params.sigma = _gaussSigma;
+
+	/**Sharpness parameters*/
+	params.k = _k;
 	CDialog::OnOK();
 }
 
