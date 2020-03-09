@@ -69,6 +69,9 @@
     <ClInclude Include="sobel_filter\openmp\algorithm_sobel_filter_openmp.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="sobel_filter\tbb\algorithm_sobel_filter_tbb.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -105,6 +108,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="sobel_filter\openmp\algorithm_sobel_filter_openmp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="sobel_filter\tbb\algorithm_sobel_filter_tbb.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

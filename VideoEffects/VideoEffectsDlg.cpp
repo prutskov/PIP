@@ -345,7 +345,7 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			break;
 		case Algorithm::sobel:
 			alg = std::shared_ptr<algorithms::sobel_filter::openmp::Algorithm>(new algorithms::sobel_filter::openmp::Algorithm());
-			parameters = new algorithms::sobel_filter::Parameter(params.k);
+			parameters = new algorithms::sobel_filter::Parameter();
 			break;
 		default:
 			break;
@@ -366,6 +366,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 		case Algorithm::sharpness:
 			alg = std::shared_ptr<algorithms::sharpness::tbb::Algorithm>(new algorithms::sharpness::tbb::Algorithm());
 			parameters = new algorithms::sharpness::Parameter(params.k);
+			break;
+		case Algorithm::sobel:
+			alg = std::shared_ptr<algorithms::sobel_filter::tbb::Algorithm>(new algorithms::sobel_filter::tbb::Algorithm());
+			parameters = new algorithms::sobel_filter::Parameter();
 			break;
 		default:
 			break;
