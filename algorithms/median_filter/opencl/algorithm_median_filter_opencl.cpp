@@ -101,16 +101,13 @@ namespace algorithms
 					(_frame.nRows*_frame.nCols) * sizeof(float), _frame.dataBPtr.get());
 
 				cl::Buffer imageROut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataRPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageGOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageBOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Kernel kernelR(_program, "nativeFilter3x3");
 				cl::Kernel kernelG(_program, "nativeFilter3x3");
@@ -162,16 +159,13 @@ namespace algorithms
 					(_frame.nRows*_frame.nCols) * sizeof(float), _frame.dataBPtr.get());
 
 				cl::Buffer imageROut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataRPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageGOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageBOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(result.nRows*result.nCols) * sizeof(float), result.dataGPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Kernel kernelR(_program, "nativeFilter5x5");
 				cl::Kernel kernelG(_program, "nativeFilter5x5");

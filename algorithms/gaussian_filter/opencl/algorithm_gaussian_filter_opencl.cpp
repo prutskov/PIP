@@ -129,16 +129,13 @@ namespace algorithms
 					(nRows*nCols) * sizeof(float), _frame.dataBPtr.get());
 
 				cl::Buffer imageROut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(partialResult.nRows*partialResult.nCols) * sizeof(float), partialResult.dataRPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageGOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(partialResult.nRows*partialResult.nCols) * sizeof(float), partialResult.dataGPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageBOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-					(partialResult.nRows*partialResult.nCols) * sizeof(float), partialResult.dataGPtr.get());
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Kernel kernelHorizontR(_program, "horizDirectionKernel");
 				cl::Kernel kernelHorizontG(_program, "horizDirectionKernel");
