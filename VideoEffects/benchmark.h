@@ -14,6 +14,7 @@ public:
 private:
 	void benchMedianFilter(std::vector<Frame>& frames);
 	void benchGaussFilter(std::vector<Frame>& frames);
+	void benchSharpness(std::vector<Frame>& frames);
 	size_t nIterations;
 	std::ofstream logFile;
 };

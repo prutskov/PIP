@@ -60,6 +60,9 @@
     <ClInclude Include="sharpness\tbb\algorithm_sharpness_tbb.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="sharpness\opencl\algorithm_sharpness_opencl.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -92,9 +95,13 @@
     <ClCompile Include="sharpness\tbb\algorithm_sharpness_tbb.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="sharpness\opencl\algorithm_sharpness_opencl.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
     <None Include="..\VideoEffects\kernels\gauss.cl" />
+    <None Include="..\VideoEffects\kernels\sharpness.cl" />
   </ItemGroup>
 </Project>

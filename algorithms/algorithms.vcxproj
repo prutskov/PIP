@@ -175,6 +175,7 @@
     <ClInclude Include="median_filter\openmp\algorithm_median_filter_openmp.h" />
     <ClInclude Include="median_filter\parameter_median_filter.h" />
     <ClInclude Include="median_filter\tbb\algorithm_median_filter_tbb.h" />
+    <ClInclude Include="sharpness\opencl\algorithm_sharpness_opencl.h" />
     <ClInclude Include="sharpness\openmp\algorithm_sharpness_openmp.h" />
     <ClInclude Include="sharpness\parameter_sharpness.h" />
     <ClInclude Include="sharpness\tbb\algorithm_sharpness_tbb.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="median_filter\opencl\algorithm_median_filter_opencl.cpp" />
     <ClCompile Include="median_filter\openmp\algorithm_median_filter_openmp.cpp" />
     <ClCompile Include="median_filter\tbb\algorithm_median_filter_tbb.cpp" />
+    <ClCompile Include="sharpness\opencl\algorithm_sharpness_opencl.cpp" />
     <ClCompile Include="sharpness\openmp\algorithm_sharpness_openmp.cpp" />
     <ClCompile Include="sharpness\tbb\algorithm_sharpness_tbb.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -201,6 +203,7 @@
   <ItemGroup>
     <None Include="..\VideoEffects\kernels\gauss.cl" />
     <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
+    <None Include="..\VideoEffects\kernels\sharpness.cl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

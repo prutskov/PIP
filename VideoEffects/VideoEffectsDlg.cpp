@@ -316,7 +316,11 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			break;
 		case Algorithm::gauss:
 			alg = std::shared_ptr<algorithms::gaussian_filter::opencl::Algorithm>(new algorithms::gaussian_filter::opencl::Algorithm());
-			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma);
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma, _deviceNames.GetCurSel());
+			break;
+		case Algorithm::sharpness:
+			alg = std::shared_ptr<algorithms::sharpness::opencl::Algorithm>(new algorithms::sharpness::opencl::Algorithm());
+			parameters = new algorithms::sharpness::Parameter(params.k, _deviceNames.GetCurSel());
 			break;
 		default:
 			break;
