@@ -136,11 +136,9 @@ namespace algorithms
 				comqueque.enqueueNDRangeKernel(kernelB, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
 				comqueque.finish();
 
-				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataRPtr.get());
-				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataGPtr.get());
-				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataBPtr.get());
-
-				_frame = result;
+				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataRPtr.get());
+				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataGPtr.get());
+				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataBPtr.get());
 			}
 
 			void Algorithm::compute5x5()
@@ -199,11 +197,9 @@ namespace algorithms
 				comqueque.enqueueNDRangeKernel(kernelB, cl::NullRange, cl::NDRange(result.nRows, result.nCols), cl::NDRange(4, 4));
 				comqueque.finish();
 
-				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataRPtr.get());
-				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataGPtr.get());
-				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), result.dataBPtr.get());
-
-				_frame = result;
+				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataRPtr.get());
+				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataGPtr.get());
+				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataBPtr.get());
 			}
 
 			std::vector<std::string> Algorithm::getDevices()

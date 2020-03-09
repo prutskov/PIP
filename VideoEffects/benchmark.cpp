@@ -26,7 +26,7 @@ void Benchmark::runBenchmark()
 	frames.push_back(CVManager::generateFrame(1080, 1920));
 	frames.push_back(CVManager::generateFrame(2160, 4096));
 
-	//benchMedianFilter(frames);
+	benchMedianFilter(frames);
 	benchGaussFilter(frames);
 	benchSharpness(frames);
 }
