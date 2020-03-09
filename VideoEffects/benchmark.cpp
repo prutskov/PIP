@@ -29,6 +29,7 @@ void Benchmark::runBenchmark()
 	benchMedianFilter(frames);
 	benchGaussFilter(frames);
 	benchSharpness(frames);
+	benchSobelFilter(frames);
 }
 
 void Benchmark::benchMedianFilter(std::vector<Frame>& frames)
@@ -242,6 +243,83 @@ void Benchmark::benchSharpness(std::vector<Frame>& frames)
 		{ // opencl test
 			alg = std::shared_ptr<algorithms::sharpness::opencl::Algorithm>(new algorithms::sharpness::opencl::Algorithm());
 			parameters = new algorithms::sharpness::Parameter(params.k, params.activeDevice);
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeOCL += alg->compute();
+			}
+
+			timeOCL /= static_cast<float>(nIterations);
+
+			deviceName = alg->getDevices()[params.activeDevice];
+		}
+
+
+		std::string resolution = std::to_string(frame.nRows) + "x" + std::to_string(frame.nCols);
+		logFile << "|";
+		logFile << std::setw(18);
+		logFile << resolution << "|";
+		logFile << std::setw(14) << timeOMP << "|";
+		logFile << std::setw(14) << timeTBB << "|";
+		logFile << std::setw(14) << timeOCL << "|";
+		logFile << std::endl;
+	}
+
+	logFile << "Used OpenCL device: " << deviceName << std::endl;
+}
+
+void Benchmark::benchSobelFilter(std::vector<Frame>& frames)
+{
+	logFile << "\n\nSharpness\n";
+
+	std::shared_ptr<algorithms::Algorithm> alg;
+	algorithms::ParameterIface *parameters;
+
+	std::string deviceName;
+
+	logFile << "|    Image size    |    OpenMP    |   Intel TBB  |    OpenCL    |\n";
+	for (const Frame& frame : frames)
+	{
+		float timeOMP = 0.f;
+		float timeTBB = 0.f;
+		float timeOCL = 0.f;
+
+		{ // openmp test
+			alg = std::shared_ptr<algorithms::sobel_filter::openmp::Algorithm>(new algorithms::sobel_filter::openmp::Algorithm());
+			parameters = new algorithms::sobel_filter::Parameter();
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeOMP += alg->compute();
+			}
+
+			timeOMP /= static_cast<float>(nIterations);
+		}
+
+		{ // tbb test
+			alg = std::shared_ptr<algorithms::sobel_filter::tbb::Algorithm>(new algorithms::sobel_filter::tbb::Algorithm());
+			parameters = new algorithms::sobel_filter::Parameter();
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeTBB += alg->compute();
+			}
+
+			timeTBB /= static_cast<float>(nIterations);
+		}
+
+		{ // opencl test
+			alg = std::shared_ptr<algorithms::sobel_filter::opencl::Algorithm>(new algorithms::sobel_filter::opencl::Algorithm());
+			parameters = new algorithms::sobel_filter::Parameter(params.activeDevice);
 
 			alg->setParameter(parameters);
 			alg->setFrame(frame);
