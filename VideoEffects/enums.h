@@ -11,5 +11,6 @@ enum class Algorithm
 	none,
 	median,
 	gauss,
-	sharpness
+	sharpness,
+	sobel
 };

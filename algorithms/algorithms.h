@@ -14,3 +14,6 @@
 #include "sharpness/openmp/algorithm_sharpness_openmp.h"
 #include "sharpness/opencl/algorithm_sharpness_opencl.h"
 #include "sharpness/tbb/algorithm_sharpness_tbb.h"
+
+#include "sobel_filter/parameter_sobel_filter.h"
+#include "sobel_filter/openmp/algorithm_sobel_filter_openmp.h"
