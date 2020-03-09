@@ -1,8 +1,6 @@
 #include "stdafx.h"
 
-#include <cmath>
 #include <algorithm>
-#include <numeric>
 #include <chrono>
 
 #include "algorithm_sharpness_openmp.h"

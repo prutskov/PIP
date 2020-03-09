@@ -16,10 +16,11 @@ namespace algorithms
 				float compute() override;
 				void setParameter(ParameterIface *parameter) override;
 				virtual ~Algorithm();
-			private:
-				void pixelCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
+
+			protected:
 				void generateSharpnessnKernel();
-				void computeImpl();
+				void pixelCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
+				virtual void computeImpl();
 
 				std::vector<float> sharpnessKernel;
 			};

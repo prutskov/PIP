@@ -12,3 +12,4 @@
 
 #include "sharpness/parameter_sharpness.h"
 #include "sharpness/openmp/algorithm_sharpness_openmp.h"
+#include "sharpness/tbb/algorithm_sharpness_tbb.h"

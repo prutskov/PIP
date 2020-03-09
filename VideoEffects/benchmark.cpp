@@ -131,7 +131,7 @@ void Benchmark::benchGaussFilter(std::vector<Frame>& frames)
 
 		{ // openmp test
 			alg = std::shared_ptr<algorithms::gaussian_filter::openmp::Algorithm>(new algorithms::gaussian_filter::openmp::Algorithm());
-			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask);
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma);
 
 			alg->setParameter(parameters);
 			alg->setFrame(frame);
@@ -146,7 +146,7 @@ void Benchmark::benchGaussFilter(std::vector<Frame>& frames)
 
 		{ // tbb test
 			alg = std::shared_ptr<algorithms::gaussian_filter::tbb::Algorithm>(new algorithms::gaussian_filter::tbb::Algorithm());
-			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask);
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma);
 
 			alg->setParameter(parameters);
 			alg->setFrame(frame);
@@ -161,7 +161,7 @@ void Benchmark::benchGaussFilter(std::vector<Frame>& frames)
 
 		{ // opencl test
 			alg = std::shared_ptr<algorithms::gaussian_filter::opencl::Algorithm>(new algorithms::gaussian_filter::opencl::Algorithm());
-			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.activeDevice);
+			parameters = new algorithms::gaussian_filter::Parameter(params.gaussFilterMask, params.sigma, params.activeDevice);
 
 			alg->setParameter(parameters);
 			alg->setFrame(frame);
