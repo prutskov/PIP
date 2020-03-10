@@ -351,6 +351,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			alg = std::shared_ptr<algorithms::sobel_filter::openmp::Algorithm>(new algorithms::sobel_filter::openmp::Algorithm());
 			parameters = new algorithms::sobel_filter::Parameter();
 			break;
+		case Algorithm::erosion:
+			alg = std::shared_ptr<algorithms::erosion::openmp::Algorithm>(new algorithms::erosion::openmp::Algorithm());
+			parameters = new algorithms::erosion::Parameter();
+			break;
 		default:
 			break;
 		}

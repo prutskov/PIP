@@ -12,5 +12,6 @@ enum class Algorithm
 	median,
 	gauss,
 	sharpness,
-	sobel
+	sobel,
+	erosion
 };
