@@ -1,7 +1,4 @@
 #include "stdafx.h"
-
-#include <algorithm>
-#include <chrono>
 #include "tbb/parallel_for.h"
 #include "tbb/blocked_range2d.h"
 

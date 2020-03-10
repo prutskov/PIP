@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include <algorithm>
-#include <chrono>
 
 #include "algorithm_sharpness_openmp.h"
 
@@ -11,10 +10,6 @@ namespace algorithms
 	{
 		namespace openmp
 		{
-			Algorithm::Algorithm() {}
-
-			Algorithm::~Algorithm() {}
-
 			void Algorithm::generateSharpnessnKernel()
 			{
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
@@ -36,18 +31,7 @@ namespace algorithms
 				_parameter = parameter;
 				generateSharpnessnKernel();
 			}
-
-			float Algorithm::compute()
-			{				
-				auto start = std::chrono::high_resolution_clock::now();
-				computeImpl();
-				auto end = std::chrono::high_resolution_clock::now();
-				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
-
-				return duration;
-			}
-
-
+					   
 			void Algorithm::pixelCompute(int x, int y, const Frame& frame, Frame& result, int indexRes)
 			{
 				const size_t maskSize = 9;//sharpnessKernel.size();

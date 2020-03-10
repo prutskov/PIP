@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include <fstream>
-#include <chrono>
 
 #include "algorithm_median_filter_opencl.h"
 
@@ -10,31 +9,6 @@ namespace algorithms
 	{
 		namespace opencl
 		{
-			Algorithm::Algorithm()
-			{
-				_platforms.clear();
-				_devices.clear();
-				 
-				/*Get platfroms*/
-				cl::Platform::get(&_platforms);
-
-				/*Get all devices*/
-				for (cl::Platform plat : _platforms)
-				{
-					std::vector<cl::Device> device;
-					plat.getDevices(CL_DEVICE_TYPE_ALL, &device);
-					_devices.insert(_devices.end(), device.begin(), device.end());
-				}
-			}
-
-			Algorithm::~Algorithm() {}
-
-			void Algorithm::setParameter(ParameterIface *parameter)
-			{
-				_parameter = parameter;
-				buildProgram();
-			}
-
 			void Algorithm::buildProgram()
 			{
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
@@ -60,10 +34,9 @@ namespace algorithms
 				}
 			}
 
-			float Algorithm::compute()
+			void Algorithm::computeImpl()
 			{
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
-				auto start = std::chrono::high_resolution_clock::now();
 				if (par->mask == Mask::MASK3X3)
 				{
 					compute3x3();
@@ -72,13 +45,7 @@ namespace algorithms
 				{
 					compute5x5();
 				}
-
-				auto end = std::chrono::high_resolution_clock::now();
-				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
-
-				return duration;
 			}
-
 
 			void Algorithm::compute3x3()
 			{
@@ -194,18 +161,6 @@ namespace algorithms
 				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataRPtr.get());
 				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataGPtr.get());
 				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, result.nRows*result.nCols * sizeof(float), _frame.dataBPtr.get());
-			}
-
-			std::vector<std::string> Algorithm::getDevices()
-			{
-				std::vector<std::string> deviceNames(_devices.size());
-
-				for (size_t i = 0; i < _devices.size(); i++)
-				{
-					deviceNames[i] = _devices[i].getInfo<CL_DEVICE_NAME>();
-				}
-
-				return deviceNames;
 			}
 		}
 

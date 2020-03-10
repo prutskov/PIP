@@ -1,7 +1,6 @@
 #pragma once
 #include "../openmp/algorithm_sharpness_openmp.h"
 #include "../parameter_sharpness.h"
-#include <vector>
 
 namespace algorithms
 {

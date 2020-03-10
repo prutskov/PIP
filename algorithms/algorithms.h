@@ -1,5 +1,6 @@
 #pragma once
-#include "Algorithm.h"
+#include "algorithm.h"
+#include "algorithm_opencl.h"
 #include "median_filter/parameter_median_filter.h"
 #include "median_filter/openmp/algorithm_median_filter_openmp.h"
 #include "median_filter/opencl/algorithm_median_filter_opencl.h"

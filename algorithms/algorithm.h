@@ -28,6 +28,7 @@ namespace algorithms
 		virtual std::vector<std::string> getDevices();
 
 	protected:
+		virtual void computeImpl() {};
 		Frame _frame;
 		ParameterIface *_parameter;
 	};

@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "stdafx.h"
-#include "Algorithm.h"
+#include <chrono>
+
+#include "algorithm.h"
 
 namespace algorithms
 {
@@ -50,7 +51,12 @@ namespace algorithms
 
 	float Algorithm::compute()
 	{
-		return 0.0f;
+		auto start = std::chrono::high_resolution_clock::now();
+		computeImpl();
+		auto end = std::chrono::high_resolution_clock::now();
+		float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
+
+		return duration;
 	}
 
 	std::vector<std::string> Algorithm::getDevices()

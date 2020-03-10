@@ -1,9 +1,7 @@
 #include "stdafx.h"
 
-#define _USE_MATH_DEFINES
-#include <algorithm>
 #include <fstream>
-#include <chrono>
+#include <algorithm>
 
 #include "algorithm_sharpness_opencl.h"
 
@@ -13,25 +11,6 @@ namespace algorithms
 	{
 		namespace opencl
 		{
-			Algorithm::Algorithm()
-			{
-				_platforms.clear();
-				_devices.clear();
-				 
-				/*Get platfroms*/
-				cl::Platform::get(&_platforms);
-
-				/*Get all devices*/
-				for (cl::Platform plat : _platforms)
-				{
-					std::vector<cl::Device> device;
-					plat.getDevices(CL_DEVICE_TYPE_ALL, &device);
-					_devices.insert(_devices.end(), device.begin(), device.end());
-				}
-			}
-
-			Algorithm::~Algorithm() {}
-
 			void Algorithm::setParameter(ParameterIface *parameter)
 			{
 				_parameter = parameter;
@@ -81,17 +60,6 @@ namespace algorithms
 
 			}
 
-			float Algorithm::compute()
-			{
-				auto start = std::chrono::high_resolution_clock::now();
-				computeImpl();
-				auto end = std::chrono::high_resolution_clock::now();
-				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
-
-				return duration;
-			}
-
-
 			void Algorithm::computeImpl()
 			{
 				utils::Frame partialResult = _frame.clone();
@@ -103,7 +71,7 @@ namespace algorithms
 
 				cl::Buffer sharpnessBuf = cl::Buffer(_context,
 					CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-					(int)sharpnessKernel.size() * sizeof(float), sharpnessKernel.data());
+					sharpnessKernel.size() * sizeof(float), sharpnessKernel.data());
 
 				cl::Buffer imageRIn = cl::Buffer(_context,
 					CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
@@ -155,18 +123,6 @@ namespace algorithms
 				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, nRows*nCols * sizeof(float), _frame.dataRPtr.get());
 				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, nRows*nCols * sizeof(float), _frame.dataGPtr.get());
 				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, nRows*nCols * sizeof(float), _frame.dataBPtr.get());
-			}
-
-			std::vector<std::string> Algorithm::getDevices()
-			{
-				std::vector<std::string> deviceNames(_devices.size());
-
-				for (size_t i = 0; i < _devices.size(); i++)
-				{
-					deviceNames[i] = _devices[i].getInfo<CL_DEVICE_NAME>();
-				}
-
-				return deviceNames;
 			}
 		}
 

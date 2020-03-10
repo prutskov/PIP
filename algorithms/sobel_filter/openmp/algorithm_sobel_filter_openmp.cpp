@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <chrono>
-
 #include "algorithm_sobel_filter_openmp.h"
 
 namespace algorithms
@@ -10,10 +8,6 @@ namespace algorithms
 	{
 		namespace openmp
 		{
-			Algorithm::Algorithm() {}
-
-			Algorithm::~Algorithm() {}
-
 			void Algorithm::generateSobelMatrix()
 			{
 				gXKernel = {-1, 0, 1,
@@ -30,17 +24,6 @@ namespace algorithms
 				_parameter = parameter;
 				generateSobelMatrix();
 			}
-
-			float Algorithm::compute()
-			{				
-				auto start = std::chrono::high_resolution_clock::now();
-				computeImpl();
-				auto end = std::chrono::high_resolution_clock::now();
-				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
-
-				return duration;
-			}
-
 
 			void Algorithm::pixelCompute(int x, int y, const Frame& frame, Frame& result, int indexRes)
 			{

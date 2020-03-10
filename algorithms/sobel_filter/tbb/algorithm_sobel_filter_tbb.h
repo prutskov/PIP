@@ -1,7 +1,6 @@
 #pragma once
 #include "../openmp/algorithm_sobel_filter_openmp.h"
 #include "../parameter_sobel_filter.h"
-#include <vector>
 
 namespace algorithms
 {

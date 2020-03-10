@@ -12,17 +12,16 @@ namespace algorithms
 			class Algorithm : public algorithms::Algorithm
 			{
 			public:
-				Algorithm();
-				float compute() override;
 				void setParameter(ParameterIface *parameter) override;
-				virtual ~Algorithm();
-			private:
-				void generateGaussianKernel();
+			protected:
+				void computeImpl() override;
 				void horizDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
 				void verticDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
-				void directionsCompute();
 
 				std::vector<float> gaussKernel;
+			private:
+				void generateGaussianKernel();
+
 			};
 		}
 	}

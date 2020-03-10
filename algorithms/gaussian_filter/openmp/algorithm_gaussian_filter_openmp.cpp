@@ -4,7 +4,6 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
-#include <chrono>
 
 #include "algorithm_gaussian_filter_openmp.h"
 
@@ -14,10 +13,6 @@ namespace algorithms
 	{
 		namespace openmp
 		{
-			Algorithm::Algorithm() {}
-
-			Algorithm::~Algorithm() {}
-
 			void Algorithm::generateGaussianKernel()
 			{
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
@@ -49,18 +44,7 @@ namespace algorithms
 				_parameter = parameter;
 				generateGaussianKernel();
 			}
-
-			float Algorithm::compute()
-			{				
-				auto start = std::chrono::high_resolution_clock::now();
-				directionsCompute();
-				auto end = std::chrono::high_resolution_clock::now();
-				float duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0F;
-
-				return duration;
-			}
-
-
+					   
 			void Algorithm::horizDirectionCompute(int x, int y, const Frame& frame, Frame& result, int indexRes)
 			{
 				const size_t maskSize = gaussKernel.size();
@@ -106,7 +90,7 @@ namespace algorithms
 				result.dataBPtr[indexRes] = sumB;
 			}
 
-			void Algorithm::directionsCompute()
+			void Algorithm::computeImpl()
 			{
 				Frame partialResult = _frame.clone();
 				const int nRows = static_cast<int>(partialResult.nRows);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Algorithm.h"
+#include "../../algorithm.h"
 #include "../parameter_sharpness.h"
 #include <vector>
 
@@ -12,17 +12,15 @@ namespace algorithms
 			class Algorithm : public algorithms::Algorithm
 			{
 			public:
-				Algorithm();
-				float compute() override;
 				void setParameter(ParameterIface *parameter) override;
-				virtual ~Algorithm();
 
 			protected:
-				void generateSharpnessnKernel();
+				void computeImpl() override;
 				void pixelCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
-				virtual void computeImpl();
-
 				std::vector<float> sharpnessKernel;
+
+			private:
+				void generateSharpnessnKernel();
 			};
 		}
 	}

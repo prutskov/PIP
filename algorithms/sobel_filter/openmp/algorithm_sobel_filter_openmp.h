@@ -12,16 +12,14 @@ namespace algorithms
 			class Algorithm : public algorithms::Algorithm
 			{
 			public:
-				Algorithm();
-				float compute() override;
 				void setParameter(ParameterIface *parameter) override;
-				virtual ~Algorithm();
 
 			protected:
+				virtual void computeImpl() override;
 				void generateSobelMatrix();
 				void pixelCompute(int x, int y, const Frame& frame, Frame& result, int indexRes);
-				virtual void computeImpl();
 
+			private:
 				std::vector<float> gXKernel;
 				std::vector<float> gYKernel;
 			};
