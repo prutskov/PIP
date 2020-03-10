@@ -273,7 +273,7 @@ void Benchmark::benchSharpness(std::vector<Frame>& frames)
 
 void Benchmark::benchSobelFilter(std::vector<Frame>& frames)
 {
-	logFile << "\n\nSharpness\n";
+	logFile << "\n\nSobel filter\n";
 
 	std::shared_ptr<algorithms::Algorithm> alg;
 	algorithms::ParameterIface *parameters;
