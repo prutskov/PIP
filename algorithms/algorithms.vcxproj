@@ -168,6 +168,7 @@
     <ClInclude Include="algorithm.h" />
     <ClInclude Include="algorithms.h" />
     <ClInclude Include="algorithm_opencl.h" />
+    <ClInclude Include="erosion\opencl\algorithm_erosion_opencl.h" />
     <ClInclude Include="erosion\openmp\algorithm_erosion_openmp.h" />
     <ClInclude Include="erosion\parameter_erosion.h" />
     <ClInclude Include="erosion\tbb\algorithm_erosion_tbb.h" />
@@ -193,6 +194,7 @@
   <ItemGroup>
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="algorithm_opencl.cpp" />
+    <ClCompile Include="erosion\opencl\algorithm_erosion_opencl.cpp" />
     <ClCompile Include="erosion\openmp\algorithm_erosion_openmp.cpp" />
     <ClCompile Include="erosion\tbb\algorithm_erosion_tbb.cpp" />
     <ClCompile Include="gaussian_filter\opencl\algorithm_gaussian_filter_opencl.cpp" />
@@ -216,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\VideoEffects\kernels\gauss.cl" />
+    <None Include="..\VideoEffects\kernels\morphology.cl" />
     <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
     <None Include="..\VideoEffects\kernels\sharpness.cl" />
     <None Include="..\VideoEffects\kernels\sobel.cl" />

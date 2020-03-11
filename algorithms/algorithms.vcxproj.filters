@@ -87,6 +87,9 @@
     <ClInclude Include="erosion\tbb\algorithm_erosion_tbb.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="erosion\opencl\algorithm_erosion_opencl.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -140,11 +143,15 @@
     <ClCompile Include="erosion\tbb\algorithm_erosion_tbb.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="erosion\opencl\algorithm_erosion_opencl.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
     <None Include="..\VideoEffects\kernels\gauss.cl" />
     <None Include="..\VideoEffects\kernels\sharpness.cl" />
     <None Include="..\VideoEffects\kernels\sobel.cl" />
+    <None Include="..\VideoEffects\kernels\morphology.cl" />
   </ItemGroup>
 </Project>

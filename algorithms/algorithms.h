@@ -22,5 +22,6 @@
 #include "sobel_filter/tbb/algorithm_sobel_filter_tbb.h"
 
 #include "erosion/parameter_erosion.h"
+#include "erosion/opencl/algorithm_erosion_opencl.h"
 #include "erosion/openmp/algorithm_erosion_openmp.h"
 #include "erosion/tbb/algorithm_erosion_tbb.h"

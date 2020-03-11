@@ -326,6 +326,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			alg = std::shared_ptr<algorithms::sobel_filter::opencl::Algorithm>(new algorithms::sobel_filter::opencl::Algorithm());
 			parameters = new algorithms::sobel_filter::Parameter(_deviceNames.GetCurSel());
 			break;
+		case Algorithm::erosion:
+			alg = std::shared_ptr<algorithms::erosion::opencl::Algorithm>(new algorithms::erosion::opencl::Algorithm());
+			parameters = new algorithms::erosion::Parameter(params.morphRowsMask, params.morphColsMask, params.morphType, params.activeDevice);
+			break;
 		default:
 			break;
 		}
