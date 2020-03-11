@@ -16,6 +16,7 @@ private:
 	void benchGaussFilter(std::vector<Frame>& frames);
 	void benchSharpness(std::vector<Frame>& frames);
 	void benchSobelFilter(std::vector<Frame>& frames);
+	void benchMorphology(std::vector<Frame>& frames);
 	size_t nIterations;
 	std::ofstream logFile;
 };

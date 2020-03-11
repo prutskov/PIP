@@ -347,3 +347,83 @@ void Benchmark::benchSobelFilter(std::vector<Frame>& frames)
 
 	logFile << "Used OpenCL device: " << deviceName << std::endl;
 }
+
+void Benchmark::benchMorphology(std::vector<Frame>& frames)
+{
+	logFile << "\n\nMorphology\n";
+
+	std::shared_ptr<algorithms::Algorithm> alg;
+	algorithms::ParameterIface *parameters;
+	logFile << "Parameters:\n" <<
+		"\t\t\tmask:  " << params.morphRowsMask << "x" << params.morphColsMask << std::endl;
+	std::string algStr = params.morphType == algorithms::erosion::dilation ? "dilation" : "erosion";
+	logFile << "\t\t\talgorithm: " << algStr << std::endl;
+
+	std::string deviceName;
+
+	logFile << "|    Image size    |    OpenMP    |   Intel TBB  |    OpenCL    |\n";
+	for (const Frame& frame : frames)
+	{
+		float timeOMP = 0.f;
+		float timeTBB = 0.f;
+		float timeOCL = 0.f;
+
+		{ // openmp test
+			alg = std::shared_ptr<algorithms::erosion::openmp::Algorithm>(new algorithms::erosion::openmp::Algorithm());
+			parameters = new algorithms::erosion::Parameter(params.morphRowsMask, params.morphColsMask, params.morphType);
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeOMP += alg->compute();
+			}
+
+			timeOMP /= static_cast<float>(nIterations);
+		}
+
+		{ // tbb test
+			alg = std::shared_ptr<algorithms::erosion::tbb::Algorithm>(new algorithms::erosion::tbb::Algorithm());
+			parameters = new algorithms::erosion::Parameter(params.morphRowsMask, params.morphColsMask, params.morphType);
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeTBB += alg->compute();
+			}
+
+			timeTBB /= static_cast<float>(nIterations);
+		}
+
+		{ // opencl test
+			alg = std::shared_ptr<algorithms::erosion::opencl::Algorithm>(new algorithms::erosion::opencl::Algorithm());
+			parameters = new algorithms::erosion::Parameter(params.morphRowsMask, params.morphColsMask, params.morphType, params.activeDevice);
+
+			alg->setParameter(parameters);
+			alg->setFrame(frame);
+
+			for (size_t i = 0; i < nIterations; ++i)
+			{
+				timeOCL += alg->compute();
+			}
+
+			timeOCL /= static_cast<float>(nIterations);
+
+			deviceName = alg->getDevices()[params.activeDevice];
+		}
+
+
+		std::string resolution = std::to_string(frame.nRows) + "x" + std::to_string(frame.nCols);
+		logFile << "|";
+		logFile << std::setw(18);
+		logFile << resolution << "|";
+		logFile << std::setw(14) << timeOMP << "|";
+		logFile << std::setw(14) << timeTBB << "|";
+		logFile << std::setw(14) << timeOCL << "|";
+		logFile << std::endl;
+	}
+
+	logFile << "Used OpenCL device: " << deviceName << std::endl;
+}
