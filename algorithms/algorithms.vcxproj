@@ -170,6 +170,7 @@
     <ClInclude Include="algorithm_opencl.h" />
     <ClInclude Include="erosion\openmp\algorithm_erosion_openmp.h" />
     <ClInclude Include="erosion\parameter_erosion.h" />
+    <ClInclude Include="erosion\tbb\algorithm_erosion_tbb.h" />
     <ClInclude Include="gaussian_filter\opencl\algorithm_gaussian_filter_opencl.h" />
     <ClInclude Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.h" />
     <ClInclude Include="gaussian_filter\parameter_gaussian_filter.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="algorithm.cpp" />
     <ClCompile Include="algorithm_opencl.cpp" />
     <ClCompile Include="erosion\openmp\algorithm_erosion_openmp.cpp" />
+    <ClCompile Include="erosion\tbb\algorithm_erosion_tbb.cpp" />
     <ClCompile Include="gaussian_filter\opencl\algorithm_gaussian_filter_opencl.cpp" />
     <ClCompile Include="gaussian_filter\openmp\algorithm_gaussian_filter_openmp.cpp" />
     <ClCompile Include="gaussian_filter\tbb\algorithm_gaussian_filter_tbb.cpp" />

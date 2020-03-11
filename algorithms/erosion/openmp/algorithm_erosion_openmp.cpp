@@ -71,7 +71,7 @@ namespace algorithms
 				{
 					for (int j = 0; j < nColsRes; j++)
 					{
-						pixelCompute(j, i, _frame, result, par->type, par->rows, par->cols, i*nColsRes + j);
+						pixelCompute(j, i, _frame, result, par->type, (int)par->rows, (int)par->cols, i*nColsRes + j);
 					}
 				}
 

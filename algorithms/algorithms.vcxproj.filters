@@ -84,6 +84,9 @@
     <ClInclude Include="erosion\openmp\algorithm_erosion_openmp.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="erosion\tbb\algorithm_erosion_tbb.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -132,6 +135,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="erosion\openmp\algorithm_erosion_openmp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="erosion\tbb\algorithm_erosion_tbb.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

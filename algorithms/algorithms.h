@@ -23,3 +23,4 @@
 
 #include "erosion/parameter_erosion.h"
 #include "erosion/openmp/algorithm_erosion_openmp.h"
+#include "erosion/tbb/algorithm_erosion_tbb.h"

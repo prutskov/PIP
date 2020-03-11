@@ -379,6 +379,10 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			alg = std::shared_ptr<algorithms::sobel_filter::tbb::Algorithm>(new algorithms::sobel_filter::tbb::Algorithm());
 			parameters = new algorithms::sobel_filter::Parameter();
 			break;
+		case Algorithm::erosion:
+			alg = std::shared_ptr<algorithms::erosion::tbb::Algorithm>(new algorithms::erosion::tbb::Algorithm());
+			parameters = new algorithms::erosion::Parameter(params.morphRowsMask, params.morphColsMask, params.morphType);
+			break;
 		default:
 			break;
 		}
