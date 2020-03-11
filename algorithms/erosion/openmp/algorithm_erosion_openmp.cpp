@@ -14,54 +14,45 @@ namespace algorithms
 			{
 				if (morphType == MorphType::erosion)
 				{
-					float min = 255.f;
+					float minR = 255.f;
+					float minG = 255.f;
+					float minB = 255.f;
 					for (int row = y; row < y + rowsSE; ++row)
 					{
 						for (int col = x; col < x + colsSE; ++col)
 						{
-							min = std::min(min, frame.dataRPtr[row*frame.nCols + col]);
+							minR = std::min(minR, frame.dataRPtr[row*frame.nCols + col]);
+							minG = std::min(minG, frame.dataGPtr[row*frame.nCols + col]);
+							minB = std::min(minB, frame.dataBPtr[row*frame.nCols + col]);
 						}
 					}
-					result.dataRPtr[indexRes] = min;
+					result.dataRPtr[indexRes] = minR;
+					result.dataGPtr[indexRes] = minG;
+					result.dataBPtr[indexRes] = minB;
 				}
 				else
 				{
-					float max = 0.f;
+					float maxR = 0.f;
+					float maxG = 0.f;
+					float maxB = 0.f;
 					for (int row = y; row < y + rowsSE; ++row)
 					{
 						for (int col = x; col < x + colsSE; ++col)
 						{
-							max = std::max(max, frame.dataRPtr[row*frame.nCols + col]);
+							maxR = std::max(maxR, frame.dataRPtr[row*frame.nCols + col]);
+							maxG = std::max(maxG, frame.dataGPtr[row*frame.nCols + col]);
+							maxB = std::max(maxB, frame.dataBPtr[row*frame.nCols + col]);
 						}
 					}
-					result.dataRPtr[indexRes] = max;
+					result.dataRPtr[indexRes] = maxR;
+					result.dataGPtr[indexRes] = maxG;
+					result.dataBPtr[indexRes] = maxB;
 				}
 
 			}
-
-			void Algorithm::frameToGrayScale()
-			{
-				const int nRows = static_cast<int>(_frame.nRows);
-				const int nCols = static_cast<int>(_frame.nCols);
-#pragma omp parallel for
-				for (int row = 0; row < nRows; row++)
-				{
-					for (int col = 0; col < nCols; col++)
-					{
-						float val = 0.299*_frame.dataRPtr[row*nCols + col] + 0.587*_frame.dataGPtr[row*nCols + col] + 0.114*_frame.dataBPtr[row*nCols + col];
-
-						_frame.dataRPtr[row*nCols + col] = val;
-					}
-				}
-
-				_frame.dataGPtr = _frame.dataBPtr = _frame.dataRPtr;
-			}
-
-
+					   
 			void Algorithm::computeImpl()
 			{
-				frameToGrayScale();
-
 				const Parameter *par = dynamic_cast<Parameter *>(_parameter);
 
 				const int nRows = static_cast<int>(_frame.nRows);
@@ -71,9 +62,9 @@ namespace algorithms
 				const int nColsRes = static_cast<int>(nCols - par->cols + 1);
 
 				Frame result(nRowsRes, nColsRes,
-					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()));
+					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()));
 
 #pragma omp parallel for
 				for (int i = 0; i < nRowsRes; i++)
@@ -85,7 +76,6 @@ namespace algorithms
 				}
 
 				_frame = result;
-				_frame.dataGPtr = _frame.dataBPtr = _frame.dataRPtr;
 			}
 		}
 
