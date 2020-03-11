@@ -1,5 +1,6 @@
 #pragma once
 #include "median_filter/parameter_median_filter.h"
+#include "erosion/parameter_erosion.h"
 
 struct Parameters
 {
@@ -15,4 +16,9 @@ struct Parameters
 
 	/**Sharpness parameters*/
 	float k = 2.f;
+
+	/**Morphology (erosion/dilatation) parameters*/
+	size_t morphRowsMask = 4;
+	size_t morphColsMask = 6;
+	algorithms::erosion::MorphType morphType = algorithms::erosion::MorphType::erosion;
 };

@@ -18,6 +18,9 @@ CParameterDlg::CParameterDlg(CWnd* pParent /*=nullptr*/)
 	, _gaussMaskSize(3)
 	, _gaussSigma(1)
 	, _k(1)
+	, _morphType(FALSE)
+	, _morphRows(4)
+	, _morphCols(6)
 {
 
 }
@@ -33,6 +36,9 @@ void CParameterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_GAUSS_SIZE, _gaussMaskSize);
 	DDX_Text(pDX, IDC_GAUSS_SIGMA, _gaussSigma);
 	DDX_Text(pDX, IDC_SHARPNESS_K, _k);
+	DDX_Radio(pDX, IDC_EROSION, _morphType);
+	DDX_Text(pDX, IDC_ROWS, _morphRows);
+	DDX_Text(pDX, IDC_ROWS2, _morphCols);
 }
 
 
@@ -65,6 +71,11 @@ void CParameterDlg::setParameters()
 
 	/**Sharpness parameters*/
 	_k = params.k;
+
+	/**Morphology (erosion/dilatation) parameters*/
+	_morphRows = params.morphRowsMask;
+	_morphCols = params.morphColsMask;
+	_morphType = params.morphType == algorithms::erosion::MorphType::erosion ? 0 : 1;
 }
 
 void CParameterDlg::OnBnClickedBtnApply()
@@ -80,6 +91,11 @@ void CParameterDlg::OnBnClickedBtnApply()
 
 	/**Sharpness parameters*/
 	params.k = _k;
+
+	/**Morphology (erosion/dilatation) parameters*/
+	params.morphRowsMask = _morphRows;
+	params.morphColsMask = _morphCols;
+	params.morphType = _morphType == 0 ? algorithms::erosion::MorphType::erosion : algorithms::erosion::MorphType::dilation;
 	CDialog::OnOK();
 }
 

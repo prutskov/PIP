@@ -353,7 +353,7 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 			break;
 		case Algorithm::erosion:
 			alg = std::shared_ptr<algorithms::erosion::openmp::Algorithm>(new algorithms::erosion::openmp::Algorithm());
-			parameters = new algorithms::erosion::Parameter();
+			parameters = new algorithms::erosion::Parameter(params.morphRowsMask, params.morphColsMask, params.morphType);
 			break;
 		default:
 			break;

@@ -14,7 +14,8 @@ namespace algorithms
 			protected:
 				virtual void computeImpl() override;
 				virtual void frameToGrayScale();
-				void pixelCompute(int x, int y, const Frame& frame, Frame& result, MorphType morphType, int rowsSE, int colsSE, int indexRes);
+				void pixelCompute(int x, int y, const Frame& frame, Frame& result,
+					MorphType morphType, int rowsSE, int colsSE, int indexRes);
 
 			};
 		}

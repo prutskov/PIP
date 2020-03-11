@@ -8,7 +8,7 @@ namespace algorithms
 		enum MorphType
 		{
 			erosion,
-			dilatation
+			dilation
 		};
 		struct Parameter : algorithms::ParameterIface
 		{
@@ -16,6 +16,7 @@ namespace algorithms
 			{
 				rows = n_rows;
 				cols = n_cols;
+				type = mType;
 				activeDevice = device;
 			}
 

@@ -31,4 +31,7 @@ public:
 	float _gaussSigma;
 	size_t _gaussMaskSize;
 	float _k;
+	BOOL _morphType;
+	size_t _morphRows;
+	size_t _morphCols;
 };
