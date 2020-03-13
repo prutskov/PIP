@@ -61,10 +61,10 @@ namespace algorithms
 				const int nRowsRes = static_cast<int>(nRows - par->rows + 1);
 				const int nColsRes = static_cast<int>(nCols - par->cols + 1);
 
-				Frame result(nRowsRes, nColsRes,
-					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()));
+				Frame result(nRows, nColsRes,
+					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()));
 
 #pragma omp parallel for
 				for (int i = 0; i < nRowsRes; i++)
