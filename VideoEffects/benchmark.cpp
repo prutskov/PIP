@@ -16,7 +16,7 @@ Benchmark::~Benchmark()
 	logFile.close();
 }
 
-void Benchmark::runBenchmark()
+void Benchmark::runBenchmark(bool isMedian, bool isGauss, bool isSobel, bool isSharpness, bool isMorph)
 {
 	logFile << "################ Results of performace testing ################\n";
 	std::vector<Frame> frames;
@@ -26,10 +26,11 @@ void Benchmark::runBenchmark()
 	frames.push_back(CVManager::generateFrame(1080, 1920));
 	frames.push_back(CVManager::generateFrame(2160, 4096));
 
-	benchMedianFilter(frames);
-	benchGaussFilter(frames);
-	benchSharpness(frames);
-	benchSobelFilter(frames);
+	if (isMedian) benchMedianFilter(frames);
+	if (isGauss) benchGaussFilter(frames);
+	if (isSharpness) benchSharpness(frames);
+	if (isSobel) benchSobelFilter(frames);
+	if (isMorph) benchMorphology(frames);
 }
 
 void Benchmark::benchMedianFilter(std::vector<Frame>& frames)

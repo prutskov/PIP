@@ -9,7 +9,7 @@ class Benchmark
 public:
 	Benchmark(Parameters& par, size_t nIter = 5);
 	~Benchmark();
-	void runBenchmark();
+	void runBenchmark(bool isMedian, bool isGauss, bool isSobel, bool isSharpness, bool isMorph);
 	Parameters params;
 private:
 	void benchMedianFilter(std::vector<Frame>& frames);

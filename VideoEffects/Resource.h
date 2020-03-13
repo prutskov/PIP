@@ -36,8 +36,12 @@
 #define IDC_ROWS                        1021
 #define IDC_ROWS2                       1022
 #define IDC_EROSION                     1023
-#define IDC_DILATATION                  1024
 #define IDC_DILATION                    1024
+#define IDC_CHECK1                      1024
+#define IDC_CHECK2                      1025
+#define IDC_CHECK3                      1026
+#define IDC_CHECK4                      1027
+#define IDC_CHECK5                      1028
 
 // Next default values for new objects
 // 
@@ -45,7 +49,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1024
+#define _APS_NEXT_CONTROL_VALUE         1025
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -27,4 +27,9 @@ public:
 	Parameters params;
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedBtnRunBenchmark();
+	BOOL _isMedian;
+	BOOL _isGaussian;
+	BOOL _isSharpness;
+	BOOL _isSobel;
+	BOOL _isMorphology;
 };

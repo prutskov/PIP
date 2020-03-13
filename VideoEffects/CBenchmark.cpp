@@ -14,6 +14,11 @@ IMPLEMENT_DYNAMIC(CBenchmark, CDialogEx)
 CBenchmark::CBenchmark(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_BENCHMARK, pParent)
 	, nIter(5)
+	, _isMedian(TRUE)
+	, _isGaussian(TRUE)
+	, _isSharpness(TRUE)
+	, _isSobel(TRUE)
+	, _isMorphology(TRUE)
 {
 
 }
@@ -26,6 +31,11 @@ void CBenchmark::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_N_ITER, nIter);
+	DDX_Check(pDX, IDC_CHECK1, _isMedian);
+	DDX_Check(pDX, IDC_CHECK2, _isGaussian);
+	DDX_Check(pDX, IDC_CHECK3, _isSharpness);
+	DDX_Check(pDX, IDC_CHECK4, _isSobel);
+	DDX_Check(pDX, IDC_CHECK5, _isMorphology);
 }
 
 
@@ -52,5 +62,5 @@ void CBenchmark::OnBnClickedBtnRunBenchmark()
 {
 	UpdateData(TRUE);
 	Benchmark bench(params, 5);
-	bench.runBenchmark();
+	bench.runBenchmark(_isMedian, _isGaussian, _isSobel, _isSharpness, _isMorphology);
 }
