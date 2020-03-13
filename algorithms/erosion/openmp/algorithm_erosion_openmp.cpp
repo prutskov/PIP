@@ -61,17 +61,17 @@ namespace algorithms
 				const int nRowsRes = static_cast<int>(nRows - par->rows + 1);
 				const int nColsRes = static_cast<int>(nCols - par->cols + 1);
 
-				Frame result(nRows, nColsRes,
-					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()));
+				Frame result(nRows, nCols,
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()));
 
 #pragma omp parallel for
 				for (int i = 0; i < nRowsRes; i++)
 				{
 					for (int j = 0; j < nColsRes; j++)
 					{
-						pixelCompute(j, i, _frame, result, par->type, (int)par->rows, (int)par->cols, i*nColsRes + j);
+						pixelCompute(j, i, _frame, result, par->type, (int)par->rows, (int)par->cols, i*nCols + j);
 					}
 				}
 

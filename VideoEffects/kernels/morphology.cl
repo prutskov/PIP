@@ -1,5 +1,5 @@
 
-__kernel void erosion(const int nCols, const int nColsRes, const int nRowsSE, int nColsSE,
+__kernel void erosion(const int nCols, const int nRowsSE, int nColsSE,
 	__global const float* imageIn, __global float* imageOut)
 {
 	int rowIdx = get_global_id(0);
@@ -16,9 +16,9 @@ __kernel void erosion(const int nCols, const int nColsRes, const int nRowsSE, in
 		}
 	}
 
-	imageOut[rowIdx*nColsRes + colIdx] = minVal;
+	imageOut[rowIdx*nCols + colIdx] = minVal;
 }
-__kernel void dilation(const int nCols, const int nColsRes, const int nRowsSE, int nColsSE,
+__kernel void dilation(const int nCols, const int nRowsSE, int nColsSE,
 	__global const float* imageIn, __global float* imageOut)
 {
 	int rowIdx = get_global_id(0);
@@ -35,5 +35,5 @@ __kernel void dilation(const int nCols, const int nColsRes, const int nRowsSE, i
 		}
 	}
 
-	imageOut[rowIdx*nColsRes + colIdx] = maxVal;
+	imageOut[rowIdx*nCols + colIdx] = maxVal;
 }

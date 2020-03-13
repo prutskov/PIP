@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ImageViewer.h"
+#include <algorithm>
 
 
 ImageViewer::ImageViewer() : _colorData(nullptr)
@@ -71,6 +72,7 @@ void ImageViewer::setFrame(utils::Frame frame, utils::Frame frameOrig)
 	const int heightOrig = static_cast<int>(_frameOriginalPtr.nRows);
 
 	_colorData = std::shared_ptr<float[]>(new float[(width + widthOrig)*height * 3], std::default_delete<float[]>());
+	std::fill(_colorData.get(), _colorData.get() + (width + widthOrig)*height * 3, 0.f);
 
 	const size_t width3 = width * 3;
 	for (size_t row = 0; row < height; ++row)

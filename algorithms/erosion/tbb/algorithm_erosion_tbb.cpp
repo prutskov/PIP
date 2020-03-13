@@ -22,10 +22,10 @@ namespace algorithms
 				const int nRowsRes = static_cast<int>(nRows - par->rows + 1);
 				const int nColsRes = static_cast<int>(nCols - par->cols + 1);
 
-				Frame result(nRowsRes, nColsRes,
-					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRowsRes*nColsRes], std::default_delete<float[]>()));
+				Frame result(nRows, nCols,
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()));
 				
 				::tbb::parallel_for(::tbb::blocked_range2d<int>(0, nRowsRes, 0, nColsRes),
 					[&](::tbb::blocked_range2d<int> r)
@@ -34,7 +34,7 @@ namespace algorithms
 					{
 						for (int j = r.cols().begin(); j != r.cols().end(); ++j)
 						{
-							pixelCompute(j, i, _frame, result, par->type, (int)par->rows, (int)par->cols, i*nColsRes + j);
+							pixelCompute(j, i, _frame, result, par->type, (int)par->rows, (int)par->cols, i*nCols + j);
 						}
 					}
 				});

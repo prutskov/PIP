@@ -55,10 +55,10 @@ namespace algorithms
 				const int nRowsRes = static_cast<int>(nRows - par->rows + 1);
 				const int nColsRes = static_cast<int>(nCols - par->cols + 1);
 
-				Frame result(nRows, nColsRes,
-					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()),
-					std::shared_ptr<float[]>(new float[nRows*nColsRes], std::default_delete<float[]>()));
+				Frame result(nRows, nCols,
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()),
+					std::shared_ptr<float[]>(new float[nRows*nCols], std::default_delete<float[]>()));
 				
 				cl::CommandQueue comqueque(_context, _context.getInfo<CL_CONTEXT_DEVICES>()[0], CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE);
 				
@@ -75,22 +75,21 @@ namespace algorithms
 					(nRows*nCols) * sizeof(float), _frame.dataBPtr.get());
 
 				cl::Buffer imageROut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE, nRows*nColsRes * sizeof(float));
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageGOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE, nRows*nColsRes * sizeof(float));
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				cl::Buffer imageBOut = cl::Buffer(_context,
-					CL_MEM_READ_WRITE, nRows*nColsRes * sizeof(float));
+					CL_MEM_READ_WRITE, nRows*nCols * sizeof(float));
 
 				auto setArgs = [&](cl::Kernel& kernel, cl::Buffer& imageIn, cl::Buffer& imageOut)
 				{
 					kernel.setArg(0, nCols);
-					kernel.setArg(1, nColsRes);
-					kernel.setArg(2, static_cast<int>(par->rows));
-					kernel.setArg(3, static_cast<int>(par->cols));
-					kernel.setArg(4, imageIn);
-					kernel.setArg(5, imageOut);
+					kernel.setArg(1, static_cast<int>(par->rows));
+					kernel.setArg(2, static_cast<int>(par->cols));
+					kernel.setArg(3, imageIn);
+					kernel.setArg(4, imageOut);
 					return;
 				};
 
@@ -125,9 +124,9 @@ namespace algorithms
 				comqueque.finish();
 				
 				
-				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, nRows*nColsRes * sizeof(float), result.dataRPtr.get());
-				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, nRows*nColsRes * sizeof(float), result.dataGPtr.get());
-				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, nRows*nColsRes * sizeof(float), result.dataBPtr.get());
+				comqueque.enqueueReadBuffer(imageROut, CL_TRUE, 0, nRows*nCols * sizeof(float), result.dataRPtr.get());
+				comqueque.enqueueReadBuffer(imageGOut, CL_TRUE, 0, nRows*nCols * sizeof(float), result.dataGPtr.get());
+				comqueque.enqueueReadBuffer(imageBOut, CL_TRUE, 0, nRows*nCols * sizeof(float), result.dataBPtr.get());
 
 				_frame = result;
 			}
