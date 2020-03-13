@@ -26,10 +26,13 @@ void ImageViewer::show()
 		const int width = static_cast<int>(_framePtr.nCols);
 		const int height = static_cast<int>(_framePtr.nRows);
 
+		const int widthOrig = static_cast<int>(_frameOriginalPtr.nCols);
+		const int heightOrig = static_cast<int>(_frameOriginalPtr.nRows);
+
 		const int widthRect = _rect.right;
 		const int heightRect = _rect.bottom;
 
-		float xW = static_cast<float>(widthRect) / width;
+		float xW = static_cast<float>(widthRect) / (width + widthOrig);
 		float xH = static_cast<float>(heightRect) / height;
 
 		if (xH < xW)
@@ -42,31 +45,45 @@ void ImageViewer::show()
 			glRasterPos2f(-1.f, -xW / xH);
 			glPixelZoom(xW, xW);
 		}
-		glDrawPixels(width, height, GL_RGB, GL_FLOAT, _colorData.get());
+		glDrawPixels(width + widthOrig, height, GL_RGB, GL_FLOAT, _colorData.get());
 	}
 	glFlush();
 	SwapBuffers(wglGetCurrentDC());
 }
 
-void ImageViewer::setFrame(utils::Frame frame)
+void ImageViewer::setFrame(utils::Frame frame, utils::Frame frameOrig)
 {
 	_framePtr = frame;
+	_frameOriginalPtr = frameOrig;
+
 	float* rPtr = _framePtr.dataRPtr.get();
 	float* gPtr = _framePtr.dataGPtr.get();
 	float* bPtr = _framePtr.dataBPtr.get();
 
+	float* rOrigPtr = _frameOriginalPtr.dataRPtr.get();
+	float* gOrigPtr = _frameOriginalPtr.dataGPtr.get();
+	float* bOrigPtr = _frameOriginalPtr.dataBPtr.get();
+
 	const int width = static_cast<int>(_framePtr.nCols);
 	const int height = static_cast<int>(_framePtr.nRows);
 
-	_colorData = std::shared_ptr<float[]>(new float[width*height * 3], std::default_delete<float[]>());
+	const int widthOrig = static_cast<int>(_frameOriginalPtr.nCols);
+	const int heightOrig = static_cast<int>(_frameOriginalPtr.nRows);
 
+	_colorData = std::shared_ptr<float[]>(new float[(width + widthOrig)*height * 3], std::default_delete<float[]>());
+
+	const size_t width3 = width * 3;
 	for (size_t row = 0; row < height; ++row)
 	{
-		for (size_t col = 0; col < 3 * width; col += 3)
+		for (size_t col = 0; col < width3; col += 3)
 		{
-			_colorData[3 * width*row + col + 0] = rPtr[(height - row)*width - col / 3] / 255.f;
-			_colorData[3 * width*row + col + 1] = gPtr[(height - row)*width - col / 3] / 255.f;
-			_colorData[3 * width*row + col + 2] = bPtr[(height - row)*width - col / 3] / 255.f;
+			_colorData[3 * (width + widthOrig)*row + col + 0] = rPtr[(height - row)*width - col / 3] / 255.f;
+			_colorData[3 * (width + widthOrig)*row + col + 1] = gPtr[(height - row)*width - col / 3] / 255.f;
+			_colorData[3 * (width + widthOrig)*row + col + 2] = bPtr[(height - row)*width - col / 3] / 255.f;
+						   		    
+			_colorData[3 * (width + widthOrig)*row + col + width3 + 0] = rOrigPtr[(height - row)*width - col / 3] / 255.f;
+			_colorData[3 * (width + widthOrig)*row + col + width3 + 1] = gOrigPtr[(height - row)*width - col / 3] / 255.f;
+			_colorData[3 * (width + widthOrig)*row + col + width3 + 2] = bOrigPtr[(height - row)*width - col / 3] / 255.f;
 		}
 	}
 }

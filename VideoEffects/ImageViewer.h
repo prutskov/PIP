@@ -12,13 +12,14 @@ public:
 	~ImageViewer();
 
 	void show();
-	void setFrame(utils::Frame frame);
+	void setFrame(utils::Frame frame, utils::Frame frameOrig);
 	void initializeOGL(CRect & rt, CDC* pdc);
 
 private:
 	CRect _rect;
 	CDC* _pDC;
 	utils::Frame _framePtr;
+	utils::Frame _frameOriginalPtr;
 	std::shared_ptr<float[]> _colorData;
 	BOOL bSetupPixelFormat();
 };

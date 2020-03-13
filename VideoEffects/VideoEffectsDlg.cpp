@@ -169,7 +169,7 @@ void CVideoEffectsDlg::OnBnClickedOpen()
 	str += arg1 + "x" + arg2;
 	_ctrlImgSize.SetWindowTextW(str);
 
-	_imgViewer.setFrame(image);
+	_imgViewer.setFrame(image, image);
 	_imgViewer.show();
 }
 
@@ -253,11 +253,12 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 		{
 			cv::Mat frame;
 			video >> frame; // get a new frame from camera
-			algorithm->setFrame(cvManager->convertToPtr(frame.clone()));
+			Frame framePtr = cvManager->convertToPtr(frame.clone());
+			algorithm->setFrame(framePtr.clone());
 			//algorithm->generateNoise( 30/ 100.0F);
 			algorithm->compute();
 			EnterCriticalSection(&cs);
-			_imgViewer.setFrame(algorithm->getFrame());
+			_imgViewer.setFrame(algorithm->getFrame(), framePtr);
 			LeaveCriticalSection(&cs);
 			if (_offThread) break;
 		}
@@ -269,7 +270,8 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 			cv::Mat frame;
 			video >> frame; // get a new frame from camera
 			EnterCriticalSection(&cs);
-			_imgViewer.setFrame(cvManager->convertToPtr(frame.clone()));
+			Frame framePtr = cvManager->convertToPtr(frame.clone());
+			_imgViewer.setFrame(framePtr, framePtr);
 			LeaveCriticalSection(&cs);
 			if (_offThread) break;
 		}
@@ -279,23 +281,22 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 
 void CVideoEffectsDlg::imageFlow()
 {
+	Frame frame = cvManager->getImage();
 	if (_algType != 0)
 	{
 		std::shared_ptr<algorithms::Algorithm> algorithm;
 		setAlgParameters(algorithm);
-		algorithm->setFrame(cvManager->getImage());
+		algorithm->setFrame(frame.clone());
 
 		//algorithm->generateNoise(30 / 100.0F);
 
-		_imgViewer.setFrame(algorithm->getFrame());
-		_imgViewer.show();
 		algorithm->compute();
 
-		_imgViewer.setFrame(algorithm->getFrame());
+		_imgViewer.setFrame(algorithm->getFrame(), frame);
 	}
 	else
 	{
-		_imgViewer.setFrame(cvManager->getImage());
+		_imgViewer.setFrame(frame, frame);
 	}
 	_imgViewer.show();
 }
