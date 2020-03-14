@@ -34,4 +34,6 @@ public:
 	BOOL _morphType;
 	size_t _morphRows;
 	size_t _morphCols;
+	BOOL _isNoise;
+	size_t _percentNoise;
 };

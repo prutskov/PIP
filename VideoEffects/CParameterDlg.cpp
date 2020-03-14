@@ -21,6 +21,8 @@ CParameterDlg::CParameterDlg(CWnd* pParent /*=nullptr*/)
 	, _morphType(FALSE)
 	, _morphRows(4)
 	, _morphCols(6)
+	, _isNoise(FALSE)
+	, _percentNoise(20)
 {
 
 }
@@ -39,6 +41,8 @@ void CParameterDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_EROSION, _morphType);
 	DDX_Text(pDX, IDC_ROWS, _morphRows);
 	DDX_Text(pDX, IDC_ROWS2, _morphCols);
+	DDX_Check(pDX, IDC_CHECK2, _isNoise);
+	DDX_Text(pDX, IDC_EDIT1, _percentNoise);
 }
 
 

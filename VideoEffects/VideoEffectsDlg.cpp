@@ -4,6 +4,7 @@
 
 #include <CL/cl.hpp>
 #include "stdafx.h"
+#include <chrono>
 #include "VideoEffects.h"
 #include "VideoEffectsDlg.h"
 #include "CParameterDlg.h"
@@ -24,6 +25,8 @@ CVideoEffectsDlg::CVideoEffectsDlg(CWnd* pParent /*=nullptr*/)
 	, _accType(FALSE)
 	, _offThread(false)
 	, _algType(FALSE)
+	, _isNoiseAdd(false)
+	, _percentNoise(20)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -35,6 +38,7 @@ void CVideoEffectsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_DEV, _deviceNames);
 	DDX_Control(pDX, IDC_IMG_SIZE, _ctrlImgSize);
 	DDX_Radio(pDX, IDC_RADIO_NONE, _algType);
+	DDX_Control(pDX, IDC_FPS, _FPS);
 }
 
 BEGIN_MESSAGE_MAP(CVideoEffectsDlg, CDialogEx)
@@ -244,6 +248,8 @@ std::string CVideoEffectsDlg::getVideoPath()
 
 void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 {
+	float time = 0.f;
+	auto startTime = std::chrono::high_resolution_clock::now();
 	if (_algType != 0)
 	{
 		std::shared_ptr<algorithms::Algorithm> algorithm;
@@ -255,11 +261,25 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 			video >> frame; // get a new frame from camera
 			Frame framePtr = cvManager->convertToPtr(frame.clone());
 			algorithm->setFrame(framePtr.clone());
-			//algorithm->generateNoise( 30/ 100.0F);
+			
+			if (_isNoiseAdd)
+			{
+				algorithm->generateNoise(static_cast<float>(_percentNoise) / 100.0F);
+				framePtr = algorithm->getFrame().clone();
+			}
+
 			algorithm->compute();
 			EnterCriticalSection(&cs);
 			_imgViewer.setFrame(algorithm->getFrame(), framePtr);
 			LeaveCriticalSection(&cs);
+
+			auto endTime = std::chrono::high_resolution_clock::now();
+			time = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count() / 1000.0F;
+			startTime = endTime;
+
+			CString  str;
+			str.Format(_T("%.1f"), time);
+			_FPS.SetWindowTextW(str);
 			if (_offThread) break;
 		}
 	}
@@ -273,6 +293,15 @@ void CVideoEffectsDlg::videoFlow(cv::VideoCapture & video)
 			Frame framePtr = cvManager->convertToPtr(frame.clone());
 			_imgViewer.setFrame(framePtr, framePtr);
 			LeaveCriticalSection(&cs);
+
+			auto endTime = std::chrono::high_resolution_clock::now();
+			time = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count() / 1000.0F;
+			startTime = endTime;
+
+			CString  str;
+			str.Format(_T("%.1f"), time);
+			_FPS.SetWindowTextW(str);
+
 			if (_offThread) break;
 		}
 	}
@@ -288,7 +317,11 @@ void CVideoEffectsDlg::imageFlow()
 		setAlgParameters(algorithm);
 		algorithm->setFrame(frame.clone());
 
-		//algorithm->generateNoise(30 / 100.0F);
+		if (_isNoiseAdd)
+		{
+			algorithm->generateNoise(static_cast<float>(_percentNoise) / 100.0F);
+			frame = algorithm->getFrame().clone();
+		}
 
 		algorithm->compute();
 
@@ -299,6 +332,10 @@ void CVideoEffectsDlg::imageFlow()
 		_imgViewer.setFrame(frame, frame);
 	}
 	_imgViewer.show();
+
+	CString  str;
+	str.Format(_T("%d"), 1);
+	_FPS.SetWindowTextW(str);
 }
 
 void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> & alg)
@@ -493,9 +530,13 @@ void CVideoEffectsDlg::OnBnClickedBtnParameters()
 	UpdateData(TRUE);
 	CParameterDlg parametersDlg;
 	parametersDlg.params = params;
+	parametersDlg._isNoise = _isNoiseAdd;
+	parametersDlg._percentNoise = _percentNoise;
 	parametersDlg.DoModal();
 	params = parametersDlg.params;
 	params.activeDevice = _deviceNames.GetCurSel();
+	_isNoiseAdd = parametersDlg._isNoise;
+	_percentNoise = parametersDlg._percentNoise;
 }
 
 

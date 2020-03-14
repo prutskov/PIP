@@ -62,6 +62,8 @@ private:
 	DWORD pdwThreadCalculate;
 	bool _offThread;
 	bool _isImage;
+	bool _isNoiseAdd;
+	size_t _percentNoise;
 	Parameters params;
 public:
 	afx_msg void OnBnClickedOpenVideo();
@@ -71,6 +73,7 @@ public:
 	afx_msg void OnBnClickedStop();
 	afx_msg void OnBnClickedBtnParameters();
 	afx_msg void OnBnClickedBench();
+	CStatic _FPS;
 };
 
 DWORD WINAPI computeThread(PVOID param);
