@@ -103,5 +103,6 @@ DWORD WINAPI benchThread(PVOID param)
 		dlg->progressCtrl.SetPos(position/nAlgs);
 	}
 	dlg->lockIntarface(false);
+	dlg->MessageBox(L"Benchmarks results were written into: _benchmark_log.txt", L"Information", MB_ICONINFORMATION);
 	return 0;
 }
