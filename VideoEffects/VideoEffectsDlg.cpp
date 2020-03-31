@@ -126,6 +126,7 @@ void CVideoEffectsDlg::OnBnClickedApply()
 {
 	UpdateData(TRUE);
 
+	lockIntarface(true);
 	if (_isImage)
 	{
 		if (cvManager->isNullImage())
@@ -134,6 +135,7 @@ void CVideoEffectsDlg::OnBnClickedApply()
 			return;
 		}
 		imageFlow();
+		lockIntarface(false);
 	}
 	else
 	{
@@ -437,6 +439,22 @@ void CVideoEffectsDlg::setAlgParameters(std::shared_ptr<algorithms::Algorithm> &
 	alg->setParameter(parameters);
 }
 
+void CVideoEffectsDlg::lockIntarface(bool isLock)
+{
+	auto btnApply = GetDlgItem(IDC_APPLY);
+	auto btnOpenVideo = GetDlgItem(IDC_OPEN_VIDEO);
+	auto btnOpenImage= GetDlgItem(IDC_OPEN_IMAGE);
+	auto btnOpenCamera = GetDlgItem(IDC_OPEN_CAMERA);
+	auto btnBenchmark = GetDlgItem(IDC_BENCH);
+	auto btnParameters = GetDlgItem(IDC_BTN_PARAMETERS);
+	btnApply->EnableWindow(!isLock);
+	btnOpenVideo->EnableWindow(!isLock);
+	btnOpenImage->EnableWindow(!isLock);
+	btnOpenCamera->EnableWindow(!isLock);
+	btnBenchmark->EnableWindow(!isLock);
+	btnParameters->EnableWindow(!isLock);
+}
+
 
 void CVideoEffectsDlg::OnBnClickedOpenVideo()
 {
@@ -505,6 +523,7 @@ DWORD WINAPI computeThread(PVOID param)
 {
 	CVideoEffectsDlg *dlg = (CVideoEffectsDlg*)param;
 	dlg->videoFlow(dlg->_videoCapture);
+	dlg->lockIntarface(false);
 	return 0;
 }
 

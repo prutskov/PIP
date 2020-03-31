@@ -48,6 +48,7 @@ public:
 	void imageFlow();
 	cv::VideoCapture _videoCapture;
 	void setAlgParameters(std::shared_ptr<algorithms::Algorithm>& alg);
+	void lockIntarface(bool isLock);
 
 private:
 	CVManager* cvManager;
