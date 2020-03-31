@@ -124,10 +124,18 @@ namespace algorithms
 				setArgs(kernelHorizontG, imageGIn, imageGOut);
 				setArgs(kernelHorizontB, imageBIn, imageBOut);
 
-
-				comqueque.enqueueNDRangeKernel(kernelHorizontR, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
-				comqueque.enqueueNDRangeKernel(kernelHorizontG, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
-				comqueque.enqueueNDRangeKernel(kernelHorizontB, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+				if ((nRows % 4 == 0) && (nCols % 4 == 0))
+				{
+					comqueque.enqueueNDRangeKernel(kernelHorizontR, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+					comqueque.enqueueNDRangeKernel(kernelHorizontG, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+					comqueque.enqueueNDRangeKernel(kernelHorizontB, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+				}
+				else
+				{
+					comqueque.enqueueNDRangeKernel(kernelHorizontR, cl::NullRange, cl::NDRange(nRows, nCols));
+					comqueque.enqueueNDRangeKernel(kernelHorizontG, cl::NullRange, cl::NDRange(nRows, nCols));
+					comqueque.enqueueNDRangeKernel(kernelHorizontB, cl::NullRange, cl::NDRange(nRows, nCols));
+				}
 				comqueque.finish();
 				
 				cl::Kernel kernelVerticR(_program, "verticDirectionKernel");
@@ -138,9 +146,18 @@ namespace algorithms
 				setArgs(kernelVerticG, imageGOut, imageGIn);
 				setArgs(kernelVerticB, imageBOut, imageBIn);
 
-				comqueque.enqueueNDRangeKernel(kernelVerticR, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
-				comqueque.enqueueNDRangeKernel(kernelVerticG, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
-				comqueque.enqueueNDRangeKernel(kernelVerticB, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+				if ((nRows % 4 == 0) && (nCols % 4 == 0))
+				{
+					comqueque.enqueueNDRangeKernel(kernelVerticR, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+					comqueque.enqueueNDRangeKernel(kernelVerticG, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+					comqueque.enqueueNDRangeKernel(kernelVerticB, cl::NullRange, cl::NDRange(nRows, nCols), cl::NDRange(4, 4));
+				}
+				else
+				{
+					comqueque.enqueueNDRangeKernel(kernelVerticR, cl::NullRange, cl::NDRange(nRows, nCols));
+					comqueque.enqueueNDRangeKernel(kernelVerticG, cl::NullRange, cl::NDRange(nRows, nCols));
+					comqueque.enqueueNDRangeKernel(kernelVerticB, cl::NullRange, cl::NDRange(nRows, nCols));
+				}
 				comqueque.finish();
 
 				comqueque.enqueueReadBuffer(imageRIn, CL_TRUE, 0, nRows*nCols * sizeof(float), _frame.dataRPtr.get());
