@@ -36,6 +36,7 @@ void CBenchmark::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK3, _isSharpness);
 	DDX_Check(pDX, IDC_CHECK4, _isSobel);
 	DDX_Check(pDX, IDC_CHECK5, _isMorphology);
+	DDX_Control(pDX, IDC_PROGRESS1, progressCtrl);
 }
 
 
@@ -52,6 +53,8 @@ BOOL CBenchmark::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  Добавить дополнительную инициализацию
+	progressCtrl.SetRange(0, 100);
+	progressCtrl.SetPos(0);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // Исключение: страница свойств OCX должна возвращать значение FALSE
@@ -61,7 +64,9 @@ BOOL CBenchmark::OnInitDialog()
 void CBenchmark::OnBnClickedBtnRunBenchmark()
 {
 	UpdateData(TRUE);
+	progressCtrl.SetPos(0);
 
+	lockIntarface(true);
 	benchAlgs.clear();
 	if (_isMedian) benchAlgs.push_back(Algorithm::median);
 	if (_isGaussian) benchAlgs.push_back(Algorithm::gauss);
@@ -78,6 +83,12 @@ void CBenchmark::OnBnClickedBtnRunBenchmark()
 		&pdwThreadBench);
 }
 
+void CBenchmark::lockIntarface(bool isLock)
+{
+	auto btnRun = GetDlgItem(IDC_BTN_RUN_BENCHMARK);
+	btnRun->EnableWindow(!isLock);
+}
+
 DWORD WINAPI benchThread(PVOID param)
 {
 	CBenchmark *dlg = (CBenchmark*)param;
@@ -88,6 +99,9 @@ DWORD WINAPI benchThread(PVOID param)
 	for (int i = 0; i < nAlgs; ++i)
 	{
 		bench.runAlgorithm(dlg->benchAlgs[i]);
+		int position = (i + 1) * 100;
+		dlg->progressCtrl.SetPos(position/nAlgs);
 	}
+	dlg->lockIntarface(false);
 	return 0;
 }

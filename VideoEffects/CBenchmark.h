@@ -28,6 +28,7 @@ public:
 	Parameters params;
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedBtnRunBenchmark();
+	void lockIntarface(bool isLock);
 	BOOL _isMedian;
 	BOOL _isGaussian;
 	BOOL _isSharpness;
@@ -38,6 +39,7 @@ public:
 
 	HANDLE hThreadBench;
 	DWORD pdwThreadBench;
+	CProgressCtrl progressCtrl;
 };
 
 DWORD WINAPI benchThread(PVOID param);
