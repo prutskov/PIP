@@ -3,13 +3,14 @@
 
 #include "algorithms.h"
 #include "parameters.h"
+#include "enums.h"
 
 class Benchmark
 {
 public:
 	Benchmark(Parameters& par, size_t nIter = 5);
 	~Benchmark();
-	void runBenchmark(bool isMedian, bool isGauss, bool isSobel, bool isSharpness, bool isMorph);
+	void runAlgorithm(Algorithm& alg);
 	Parameters params;
 private:
 	void benchMedianFilter(std::vector<Frame>& frames);
@@ -19,5 +20,6 @@ private:
 	void benchMorphology(std::vector<Frame>& frames);
 	size_t nIterations;
 	std::ofstream logFile;
+	std::vector<Frame> frames;
 };
 

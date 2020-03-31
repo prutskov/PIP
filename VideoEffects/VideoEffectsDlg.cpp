@@ -147,12 +147,12 @@ void CVideoEffectsDlg::OnBnClickedApply()
 		_offThread = false;
 		SetTimer(1, 30, NULL);
 		hThreadCompute = CreateThread(
-			NULL,		// дескриптор защиты
-			0,			// начальный размер стека ( Если это значение нулевое, новый поток использует по умолчанию размер стека исполняемой программы)
-			(LPTHREAD_START_ROUTINE)computeThread,	 // функция потока
-			this,		// параметр потока 
-			0,			//oпции создания(здесь можно отложить запуск выполнения потока. Для запуска потока сразу же, передаём 0.)
-			&pdwThreadCalculate);// идентификатор потока (указатель на переменную, куда будет сохранён идентификатор потока)
+			NULL,
+			0,
+			(LPTHREAD_START_ROUTINE)computeThread,
+			this,
+			0,	
+			&pdwThreadCalculate);
 	}
 }
 

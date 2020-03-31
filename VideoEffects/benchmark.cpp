@@ -8,6 +8,13 @@
 Benchmark::Benchmark(Parameters& par, size_t nIter) : params(par), nIterations(nIter)
 {
 	logFile.open("_benchmark_log.txt", std::ios::out);
+
+	logFile << "################ Results of performace testing ################\n";
+
+	frames.push_back(CVManager::generateFrame(480, 640));
+	frames.push_back(CVManager::generateFrame(720, 1280));
+	frames.push_back(CVManager::generateFrame(1080, 1920));
+	frames.push_back(CVManager::generateFrame(2160, 4096));
 }
 
 
@@ -16,21 +23,28 @@ Benchmark::~Benchmark()
 	logFile.close();
 }
 
-void Benchmark::runBenchmark(bool isMedian, bool isGauss, bool isSobel, bool isSharpness, bool isMorph)
+void Benchmark::runAlgorithm(Algorithm & alg)
 {
-	logFile << "################ Results of performace testing ################\n";
-	std::vector<Frame> frames;
-
-	frames.push_back(CVManager::generateFrame(480, 640));
-	frames.push_back(CVManager::generateFrame(720, 1280));
-	frames.push_back(CVManager::generateFrame(1080, 1920));
-	frames.push_back(CVManager::generateFrame(2160, 4096));
-
-	if (isMedian) benchMedianFilter(frames);
-	if (isGauss) benchGaussFilter(frames);
-	if (isSharpness) benchSharpness(frames);
-	if (isSobel) benchSobelFilter(frames);
-	if (isMorph) benchMorphology(frames);
+	switch (alg)
+	{
+	case Algorithm::median:
+		benchMedianFilter(frames);
+		break;
+	case Algorithm::gauss:
+		benchGaussFilter(frames);
+		break;
+	case Algorithm::sharpness:
+		benchSharpness(frames);
+		break;
+	case Algorithm::sobel:
+		benchSobelFilter(frames);
+		break;
+	case Algorithm::erosion:
+		benchMorphology(frames);
+		break;
+	default:
+		break;
+	}
 }
 
 void Benchmark::benchMedianFilter(std::vector<Frame>& frames)

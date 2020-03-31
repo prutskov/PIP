@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "parameters.h"
 #include "benchmark.h"
+#include "enums.h"
 
 
 // Диалоговое окно CBenchmark
@@ -32,4 +33,11 @@ public:
 	BOOL _isSharpness;
 	BOOL _isSobel;
 	BOOL _isMorphology;
+
+	std::vector<Algorithm> benchAlgs;
+
+	HANDLE hThreadBench;
+	DWORD pdwThreadBench;
 };
+
+DWORD WINAPI benchThread(PVOID param);

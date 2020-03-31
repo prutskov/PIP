@@ -61,6 +61,33 @@ BOOL CBenchmark::OnInitDialog()
 void CBenchmark::OnBnClickedBtnRunBenchmark()
 {
 	UpdateData(TRUE);
-	Benchmark bench(params, 5);
-	bench.runBenchmark(_isMedian, _isGaussian, _isSobel, _isSharpness, _isMorphology);
+
+	benchAlgs.clear();
+	if (_isMedian) benchAlgs.push_back(Algorithm::median);
+	if (_isGaussian) benchAlgs.push_back(Algorithm::gauss);
+	if (_isSharpness) benchAlgs.push_back(Algorithm::sharpness);
+	if (_isSobel) benchAlgs.push_back(Algorithm::sobel);
+	if (_isMorphology) benchAlgs.push_back(Algorithm::erosion);
+
+	hThreadBench = CreateThread(
+		NULL,
+		0,
+		(LPTHREAD_START_ROUTINE)benchThread,
+		this,
+		0,
+		&pdwThreadBench);
+}
+
+DWORD WINAPI benchThread(PVOID param)
+{
+	CBenchmark *dlg = (CBenchmark*)param;
+	Benchmark bench(dlg->params, dlg->nIter);
+
+	int nAlgs = static_cast<int>(dlg->benchAlgs.size());
+
+	for (int i = 0; i < nAlgs; ++i)
+	{
+		bench.runAlgorithm(dlg->benchAlgs[i]);
+	}
+	return 0;
 }
