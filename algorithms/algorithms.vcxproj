@@ -222,6 +222,7 @@
     <None Include="..\VideoEffects\kernels\nativeBitonic.cl" />
     <None Include="..\VideoEffects\kernels\sharpness.cl" />
     <None Include="..\VideoEffects\kernels\sobel.cl" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

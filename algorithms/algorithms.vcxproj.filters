@@ -153,5 +153,6 @@
     <None Include="..\VideoEffects\kernels\sharpness.cl" />
     <None Include="..\VideoEffects\kernels\sobel.cl" />
     <None Include="..\VideoEffects\kernels\morphology.cl" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

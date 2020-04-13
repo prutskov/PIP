@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="algorithms::Algorithm" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAABAAAAEAAAAAAAEgAAAgAAAAQAAAgATAAAA=</HashCode>
+      <FileName>algorithm.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::AlgorithmOCL" Collapsed="true">
+    <Position X="11.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAABAEAAIAAAAEAAAAAAAAAQAAAAEEAAAA=</HashCode>
+      <FileName>algorithm_opencl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::erosion::opencl::Algorithm" Collapsed="true">
+    <Position X="13.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAEAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>erosion\opencl\algorithm_erosion_opencl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::erosion::openmp::Algorithm" Collapsed="true">
+    <Position X="13.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>erosion\openmp\algorithm_erosion_openmp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::erosion::tbb::Algorithm" Collapsed="true">
+    <Position X="13.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>erosion\tbb\algorithm_erosion_tbb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::gaussian_filter::opencl::Algorithm" Collapsed="true">
+    <Position X="15.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAQAEAAAAgAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>gaussian_filter\opencl\algorithm_gaussian_filter_opencl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::gaussian_filter::openmp::Algorithm" Collapsed="true">
+    <Position X="15.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAACAAAAAAAAAQAEAAAAgAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>gaussian_filter\openmp\algorithm_gaussian_filter_openmp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::gaussian_filter::tbb::Algorithm" Collapsed="true">
+    <Position X="15.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gaussian_filter\tbb\algorithm_gaussian_filter_tbb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::median_filter::opencl::Algorithm" Collapsed="true">
+    <Position X="9" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAABAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>median_filter\opencl\algorithm_median_filter_opencl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::median_filter::openmp::Algorithm" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACCAABAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>median_filter\openmp\algorithm_median_filter_openmp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::median_filter::tbb::Algorithm" Collapsed="true">
+    <Position X="9" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAACAABAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>median_filter\tbb\algorithm_median_filter_tbb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::sharpness::opencl::Algorithm" Collapsed="true">
+    <Position X="11.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAEAAAAAAAAAEAAAAgAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>sharpness\opencl\algorithm_sharpness_opencl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::sharpness::openmp::Algorithm" Collapsed="true">
+    <Position X="11.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAgEAAAAgAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>sharpness\openmp\algorithm_sharpness_openmp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::sharpness::tbb::Algorithm" Collapsed="true">
+    <Position X="11.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>sharpness\tbb\algorithm_sharpness_tbb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::sobel_filter::opencl::Algorithm" Collapsed="true">
+    <Position X="6.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AHAAAAAAAAAAAAAAAAAAAAGAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>sobel_filter\opencl\algorithm_sobel_filter_opencl.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::sobel_filter::openmp::Algorithm" Collapsed="true">
+    <Position X="6.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFAAAAAAAAAAAAAAAAAAAgGAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>sobel_filter\openmp\algorithm_sobel_filter_openmp.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="algorithms::sobel_filter::tbb::Algorithm">
+    <Position X="6.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>sobel_filter\tbb\algorithm_sobel_filter_tbb.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="algorithms::ParameterIface" Collapsed="true">
+    <Position X="11.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>algorithm.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="algorithms::erosion::Parameter" Collapsed="true">
+    <Position X="11.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAACRAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>erosion\parameter_erosion.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="algorithms::gaussian_filter::Parameter" Collapsed="true">
+    <Position X="6.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAQAAAAAAAgAAA=</HashCode>
+      <FileName>gaussian_filter\parameter_gaussian_filter.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="algorithms::median_filter::Parameter" Collapsed="true">
+    <Position X="9" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>median_filter\parameter_median_filter.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="algorithms::sharpness::Parameter" Collapsed="true">
+    <Position X="15.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>sharpness\parameter_sharpness.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="algorithms::sobel_filter::Parameter" Collapsed="true">
+    <Position X="13.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>sobel_filter\parameter_sobel_filter.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
