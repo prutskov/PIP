@@ -20,7 +20,7 @@ namespace algorithms
 				
 				std::for_each(sharpnessKernel.begin(), sharpnessKernel.end(), [k](float& val)
 				{
-					val = k / 8.f;
+					val = - k / 8.f;
 				});
 
 				sharpnessKernel[kernelSize / 2] = 1 + k;
